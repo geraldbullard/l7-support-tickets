@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>addon_catalog_supporttickets_title</key>
+      <value><![CDATA[Support Tickets by ContributionCentral]]></value>
+      <group>general</group>
+    </definition>
+    <definition>
+      <key>addon_catalog_supporttickets_description</key>
+      <value><![CDATA[Integrate Customer Support Tickets into your Loaded7 catalog.]]></value>
+      <group>general</group>
+    </definition>
+    <definition>
+      <key>addon_catalog_supporttickets_blurb</key>
+      <value><![CDATA[<p class="margin-bottom anthracite">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ut mi placerat, lacinia elit vel, bibendum erat. Morbi ultricies nisl nec sem congue dictum. Vestibulum sodales, dui quis dictum convallis, risus massa dignissim dui, sed tempor odio nisl at leo. Vestibulum dictum dapibus ligula sed laoreet.</p>]]></value>
+      <group>general</group>
+    </definition>    
+    <definition>
+      <key>my_tickets</key>
+      <value><![CDATA[My Tickets]]></value>
+      <group>general</group>
+    </definition>    
+    <definition>
+      <key>create_ticket</key>
+      <value><![CDATA[Create a Ticket]]></value>
+      <group>general</group>
+    </definition>
+    <definition>
+      <key>ticket_heading</key>
+      <value><![CDATA[Support Tickets]]></value>
+      <group>ticket</group>
+    </definition>
+    <definition>
+      <key>breadcrumb_ticket</key>
+      <value><![CDATA[Support Tickets]]></value>
+      <group>ticket</group>
+    </definition>
+    <definition>
+      <key>breadcrumb_create_ticket</key>
+      <value><![CDATA[Create Ticket]]></value>
+      <group>ticket</group>
+    </definition>
+    <definition>
+      <key>breadcrumb_view_ticket</key>
+      <value><![CDATA[View Ticket]]></value>
+      <group>ticket</group>
+    </definition>    
+    <definition>
+      <key>ticket_listing_title</key>
+      <value><![CDATA[My Current Support Tickets]]></value>
+      <group>ticket</group>
+    </definition>    
+    <definition>
+      <key>create_ticket_heading</key>
+      <value><![CDATA[Create a new Support Ticket]]></value>
+      <group>ticket</group>
+    </definition>    
+    <definition>
+      <key>some_title</key>
+      <value><![CDATA[Some Heading Title]]></value>
+      <group>ticket</group>
+    </definition>    
+    <definition>
+      <key>view_ticket_heading</key>
+      <value><![CDATA[Ticket #]]></value>
+      <group>ticket</group>
+    </definition>
+  </definitions>
+</language>
