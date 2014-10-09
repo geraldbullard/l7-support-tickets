@@ -46,8 +46,7 @@ $(document).ready(function() {
   } 
   
   if (quickAdd) {
-    alert('new ticket');
-    //newEntry();
+    //newTicket();
   }     
 });
   

@@ -39,19 +39,6 @@ class lC_Application_Support_tickets_Actions_save extends lC_Application_Support
       $sale_exclude = (isset($_POST['sale_exclude']) && $_POST['sale_exclude'] == 'on') ? 1 : -1;
       $notes = (isset($_POST['notes']) && $_POST['notes'] != NULL) ? preg_replace('/[^a-zA-Z0-9\s\.\%\,]/', '', $_POST['notes']) : NULL;
 
-      switch ($type) {
-        case 'R' : // regular 
-        case 'T' : // percent 
-          if (strstr($reward, '%')) $type = 'T'; 
-          break;
-          
-        case 'S' : // free shipping
-          break;
-          
-        case 'P' : // free product
-          break;
-      } 
-      
       $data = array('name' => $name,
                     'type' => $type,
                     'mode' => $mode,
@@ -67,11 +54,11 @@ class lC_Application_Support_tickets_Actions_save extends lC_Application_Support
                     'restrict_to_customers' => $restrict_to_customers,
                     'status' => $status,
                     'sale_exclude' => $sale_exclude,
-                    'notes' => $notes);
+                    'notes' => $notes);*/ 
 
       $id = lC_Support_tickets_Admin::save((isset($_GET[$this->_module]) && is_numeric($_GET[$this->_module]) ? $_GET[$this->_module] : null), $data);
-
-      if ( is_numeric($id) && isset($id)){
+      
+      if (is_numeric($id) && isset($id)) {
         if (!empty($_POST['save_close'])) {
           lc_redirect_admin(lc_href_link_admin(FILENAME_DEFAULT, $this->_module));
         } else {          
@@ -80,8 +67,7 @@ class lC_Application_Support_tickets_Actions_save extends lC_Application_Support
       } else {
         $lC_MessageStack->add($this->_module, $lC_Language->get('ms_error_action_not_performed'), 'error');
         lc_redirect_admin(lc_href_link_admin(FILENAME_DEFAULT, $this->_module));
-      }*/
-      lc_redirect_admin(lc_href_link_admin(FILENAME_DEFAULT, $this->_module));
+      }
     }
   }
 }
