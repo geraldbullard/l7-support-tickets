@@ -7,6 +7,9 @@
 #  @version    $Id: support_tickets.js.php v1.0 2013-08-08 maestro $
 
 heading_title = Support Tickets
+heading_title_new_ticket = New Support Ticket
+
+legend_ticket_details = Ticket Details
 
 table_heading_ticket = Ticket
 table_heading_status = Status

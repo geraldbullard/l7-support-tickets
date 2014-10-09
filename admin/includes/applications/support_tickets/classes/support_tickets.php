@@ -42,6 +42,28 @@ class lC_Support_tickets_Admin {
     return $result;
   }
  /*
+  * Returns the ticket information
+  *
+  * @param integer $id The ticket id
+  * @access public
+  * @return array
+  */
+  public static function get($id) {
+    global $lC_Database, $lC_Language;
+
+    $Qticket = $lC_Database->query('select * from :table_tickets where id = :id');
+    $Qticket->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
+    //$Qticket->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . '');
+    $Qticket->bindInt(':id', $id);
+    $Qticket->execute();
+    
+    $data = $Qticket->toArray();
+    
+    $Qticket->freeResult();
+    
+    return $data;
+  }
+ /*
   * Returns the number of open tickets
   *
   * @access public
