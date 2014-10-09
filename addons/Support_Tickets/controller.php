@@ -81,12 +81,12 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
 
     $lC_Database->simpleQuery("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Enable AddOn', 'ADDONS_CATALOG_SUPPORT_TICKETS_STATUS', '1', 'Do you want to enable this addon?', '6', '0', 'lc_cfg_use_get_boolean_value', 'lc_cfg_set_boolean_value(array(1, -1))', now())");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "tickets (id int(11) NOT NULL AUTO_INCREMENT,
-                                                                                          link_id varchar(32) DEFAULT '',
-                                                                                          customers_id int(12) DEFAULT '',
-                                                                                          customers_email varchar(96) DEFAULT '',
-                                                                                          customers_name varchar(96) DEFAULT '',
-                                                                                          orders_id int(11) DEFAULT '',
-                                                                                          subject varchar(96) DEFAULT '',
+                                                                                          link_id varchar(32) DEFAULT NULL,
+                                                                                          customers_id int(12) DEFAULT NULL,
+                                                                                          customers_email varchar(96) DEFAULT NULL,
+                                                                                          customers_name varchar(96) DEFAULT NULL,
+                                                                                          orders_id int(11) DEFAULT NULL,
+                                                                                          subject varchar(96) DEFAULT NULL,
                                                                                           status_id int(5) DEFAULT '1',
                                                                                           department_id int(5) DEFAULT '1',
                                                                                           priority_id int(5) DEFAULT '1',
@@ -158,12 +158,12 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     global $lC_Database;
 
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
-    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_admins;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_department;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_priority;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_reply;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_status;");
+    $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_status_history;");
   }
  /**
   * Return the configuration parameter keys array
