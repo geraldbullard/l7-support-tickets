@@ -26,14 +26,14 @@ class lC_Support_tickets_Admin {
     
     $result = array('aaData' => array());
     while ($Qtickets->next()) {
-      $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('id') . '" id="' . $Qtickets->valueInt('id') . '"></td>';
-      $ticket = '<td><span class="tag grey-bg">' . $Qtickets->value('id') . '</span> ' . $Qtickets->value('subject') . '</td>';
+      $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('ticket_id') . '" id="' . $Qtickets->valueInt('ticket_id') . '"></td>';
+      $ticket = '<td><span class="tag grey-bg">' . $Qtickets->value('ticket_id') . '</span> ' . $Qtickets->value('subject') . '</td>';
       $customer = '<td>' . $Qtickets->value('customers_name') . '</td>';
       $status = '<td><span class="tag ' . self::getStatusColor($Qtickets->value('status_id')) . '-bg no-wrap">' . ucfirst(self::getStatusTitle($Qtickets->value('status_id'))) . '</span></td>';
       $date = '<td>' . lC_DateTime::getShort($Qtickets->value('date_added')) . '</td>';
       $action = '<td class="align-right vertical-center"><span class="button-group compact">
-                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qtickets->valueInt('id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
-                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qtickets->valueInt('id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
+                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qtickets->valueInt('ticket_id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
+                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qtickets->valueInt('ticket_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
                  </span></td>';
 
       $result['aaData'][] = array("$check", "$ticket", "$customer", "$status", "$date", "$action");
@@ -51,10 +51,10 @@ class lC_Support_tickets_Admin {
   public static function get($id) {
     global $lC_Database, $lC_Language;
 
-    $Qticket = $lC_Database->query('select * from :table_tickets where id = :id');
+    $Qticket = $lC_Database->query('select t.*, tsh.* from :table_tickets t left join :table_ticket_status_history tsh on (t.ticket_id = tsh.ticket_id) where t.ticket_id = :ticket_id');
     $Qticket->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
-    //$Qticket->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . '');
-    $Qticket->bindInt(':id', $id);
+    $Qticket->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
+    $Qticket->bindInt(':ticket_id', $id);
     $Qticket->execute();
     
     $data = $Qticket->toArray();

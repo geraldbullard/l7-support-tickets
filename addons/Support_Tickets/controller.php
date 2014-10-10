@@ -83,7 +83,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Enable AddOn', 'ADDONS_CATALOG_SUPPORT_TICKETS_STATUS', '1', 'Do you wish to enable the Support Tickets addon?', '6', '0', 'lc_cfg_use_get_boolean_value', 'lc_cfg_set_boolean_value(array(1, -1))', now())");
     
     // Create Tables
-    $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "tickets (id INT(11) NOT NULL AUTO_INCREMENT,
+    $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "tickets (ticket_id INT(11) NOT NULL AUTO_INCREMENT,
                                                                                           link_id VARCHAR(32) DEFAULT NULL,
                                                                                           customers_id INT(12) DEFAULT NULL,
                                                                                           customers_email VARCHAR(96) DEFAULT NULL,
