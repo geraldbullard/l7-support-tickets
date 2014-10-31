@@ -23,9 +23,10 @@ $(document).ready(function() {
     "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
     "aoColumns": [{ "sWidth": "10px", "bSortable": false, "sClass": "dataColCheck" },
                   { "sWidth": "35%", "bSortable": true, "sClass": "dataColTicket" },
-                  { "sWidth": "25%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
+                  { "sWidth": "15%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColStatus hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColDate hide-on-mobile-portrait" },
+                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColModified hide-on-mobile-portrait" },
                   { "sWidth": "20%", "bSortable": false, "sClass": "dataColAction" }]
   });
   $('#dataTable').responsiveTable();
@@ -46,7 +47,28 @@ $(document).ready(function() {
   } 
   
   if (quickAdd) {
-    //newEntry();
+    //newTicket();
   }     
 });
+  
+function validateForm(e) {
+  // turn off messages
+  jQuery.validator.messages.required = "";
+
+  var tid = '<?php echo $_GET[$lC_Template->getModule()]; ?>';
+  var bValid = $("#ticket").validate({ 
+    invalidHandler: function(event, validator) {
+    },
+    ignore: "",
+    rules: {
+    },
+    messages: {
+    }, 
+  }).form();
+  if (bValid) {
+    $(e).submit();
+  }
+
+  return false;
+}
 </script>

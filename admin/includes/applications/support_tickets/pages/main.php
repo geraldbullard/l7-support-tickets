@@ -21,6 +21,7 @@
   .dataColCustomer { text-align: left; }
   .dataColStatus { text-align: left; }
   .dataColDate { text-align: left; }
+  .dataColModified { text-align: left; }
   .dataColAction { text-align: right; }
   .dataTables_info { position:absolute; bottom:42px; color:#4c4c4c; }
   .selectContainer { position:absolute; bottom:29px; left:30px }
@@ -38,6 +39,7 @@
           <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_customer'); ?></th>
           <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_status'); ?></th>
           <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_date_added'); ?></th>
+          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_date_modified'); ?></th>
           <th scope="col" class="align-right"><span class="button-group compact"><a href="javascript:void(0);" style="cursor:pointer" onclick="oTable.fnReloadAjax();" class="button with-tooltip icon-redo blue" title="<?php echo $lC_Language->get('button_refresh'); ?>"></a></span><span id="actionText">&nbsp;&nbsp;<?php echo $lC_Language->get('table_heading_action'); ?></span></th>
         </tr>
       </thead>
@@ -45,7 +47,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <th colspan="6">&nbsp;</th>
+          <th colspan="10">&nbsp;</th>
         </tr>
       </tfoot>
     </table>
