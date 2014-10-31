@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+  <id>After H1 title, add Date</id>
+  <version>1.0.0</version>
+  <vqmver>2.3.2</vqmver>
+  <author>loadedcommerce.com</author>
+  <file name="templates/default.php">
+    <operation info="At the end of the Quick Add Menu, add New Ticket">
+      <search position="replace"><![CDATA[<?php echo $lC_Language->get('quick_add_newsletter'); ?>]]></search>         
+      <add><![CDATA[
+                      <?php echo $lC_Language->get('quick_add_newsletter'); ?>
+                    </div>
+                  </a>
+                </li>
+                <li class="anthracite-gradient">
+                  <span class="list-count with-tooltip tooltip-left grey" title="<?php echo $lC_Language->get('quick_add_new_ticket'); ?>"><?php echo $lC_Language->get('quick_add_ticket_trigger'); ?></span>
+                  <a href="<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'support_tickets&action=quick_add'); ?>" class="list-link white-link-with-pad with-tooltip" title="<?php echo $lC_Language->get('quick_add_ticket_title'); ?>">
+                    <div class="add-container-icon">
+                      <i class="icon-buoy icon-white icon-pad-right"></i>
+                    </div>
+                    <div class="float-left">
+                      <?php echo $lC_Language->get('quick_add_ticket'); ?>
+      ]]></add>
+    </operation>
+  </file>
+  <file name="templates/default/general.js.php">
+    <operation info="Add quick key for new ticket">
+      <search position="replace">
+        <![CDATA[window.location.href = '<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'newsletters&action=quick_add'); ?>';]]>
+      </search>         
+      <add>
+        <![CDATA[
+              window.location.href = '<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'newsletters&action=quick_add'); ?>';
+            };
+            if (code == 116) { // n for new Support (T)icket
+              window.location.href = '<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'support_tickets&action=quick_add'); ?>';
+        ]]>
+      </add>
+    </operation>
+  </file>
+</modification>

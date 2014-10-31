@@ -66,5 +66,25 @@
       <value><![CDATA[Ticket #]]></value>
       <group>ticket</group>
     </definition>
+    <definition>
+      <key>quick_add_ticket</key>
+      <value><![CDATA[Ticket]]></value>
+      <group>general</group>
+    </definition>    
+    <definition>
+      <key>quick_add_ticket_title</key>
+      <value><![CDATA[Add New Ticket]]></value>
+      <group>general</group>
+    </definition>    
+    <definition>
+      <key>quick_add_new_ticket</key>
+      <value><![CDATA[Typing lowercase t while the Quick Add menu is active will redirect you to the New Support Ticket page]]></value>
+      <group>general</group>
+    </definition>    
+    <definition>
+      <key>quick_add_ticket_trigger</key>
+      <value><![CDATA[t]]></value>
+      <group>general</group>
+    </definition>
   </definitions>
 </language>
