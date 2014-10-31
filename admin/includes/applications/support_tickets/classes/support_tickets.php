@@ -63,7 +63,9 @@ class lC_Support_tickets_Admin {
     $Qticket->bindInt(':ticket_id', $id);
     $Qticket->execute();
     
-    $data = $Qticket->toArray();
+    while ($Qticket->next()) {
+      $data[] = $Qticket->toArray();
+    }
     
     $Qticket->freeResult();
     

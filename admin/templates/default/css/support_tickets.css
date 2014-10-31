@@ -1,0 +1,33 @@
+/* admin support tickets page specific css */
+
+.status-history-block {
+  border-bottom: 1px solid #ccc; 
+  margin-left: 0;
+}
+
+.status-history-block-info {
+  border-right: 1px solid #ccc; 
+  margin-left: -1px !important; 
+  padding-right: 10px;
+}
+
+.status-history-block-info p, .status-history-block-comment p {
+  line-height: 18px;
+}
+
+.status-history-delete-box {
+  position: relative;
+}
+
+.status-history-delete {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* custom media queries */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+}
+  
+@media screen and (max-width: 479px) {
+}

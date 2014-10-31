@@ -22,3 +22,7 @@ text_support_tickets_not_installed = The Support Tickets AddOn is not installed.
 text_support_tickets_not_enabled = The Support Tickets AddOn is not enabled. Please click <a href="index.php?store" class="bold">here</a> and select "Other" from the list of AddOn types to enable it now.
 text_ticket_latest_comments_by = Latest Comments by
 text_view_customer_listing = View customer
+text_last_reply_by = Last reply by
+text_date = Date
+text_priority = Priority
+text_comment_id = Comment ID

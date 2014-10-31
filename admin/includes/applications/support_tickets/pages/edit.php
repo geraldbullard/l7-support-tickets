@@ -20,9 +20,8 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
 <!-- Main content -->
 <section role="main" id="main">
   <hgroup id="main-title" class="thin">
-    <h1><?php echo (isset($tInfo)) ? '#' . $tInfo['ticket_id'] . ' ' . $tInfo['subject'] : $lC_Language->get('heading_title_new_ticket'); ?></h1>
+    <h1><?php echo (isset($tInfo)) ? '#' . $tInfo[0]['ticket_id'] . ' ' . $tInfo[0]['subject'] : $lC_Language->get('heading_title_new_ticket'); ?></h1>
     <?php
-      //print_r($tInfo);
       if ( $lC_MessageStack->exists($lC_Template->getModule()) ) {
         echo $lC_MessageStack->get($lC_Template->getModule());
       }
@@ -33,70 +32,38 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
       <div class="new-row-mobile twelve-columns twelve-columns-mobile" id="ticket_content">
         <fieldset class="fieldset">
           <legend class="legend"><?php echo $lC_Language->get('legend_ticket_details'); ?></legend>
-          <div class="button-height margin-bottom columns" style="border-bottom:1px solid #ccc; margin-left:0;">
-            <div class="four-columns twelve-columns-mobile new-row-mobile" style="border-right:1px solid #ccc; margin-left:-1px; padding-right:10px;">
-              <p style="line-height:18px;">
-                Last Reply by: <strong>(<?php echo $tInfo['ticket_edited_by']; ?>)</strong><br />
-                Date: <strong><?php echo $tInfo['ticket_date_modified']; ?></strong><br />
-                Status: <strong><?php echo $tInfo['ticket_status_id']; ?></strong><br />
-                Priority: <strong><?php echo $tInfo['ticket_priority_id']; ?></strong><br />
-                Comment ID: <strong><?php echo $tInfo['ticket_status_history_id']; ?></strong>
+          <?php
+            foreach ($tInfo as $tStatusHistory) {
+          ?>
+          <div class="button-height margin-bottom columns status-history-block">
+            <div class="four-columns twelve-columns-mobile new-row-mobile status-history-block-info">
+              <p>
+                <?php echo $lC_Language->get('text_last_reply_by'); ?>: <strong>(<?php echo $tStatusHistory['ticket_edited_by']; ?>)</strong><br />
+                <?php echo $lC_Language->get('text_date'); ?>: <strong><?php echo substr(lC_DateTime::getLong($tStatusHistory['ticket_date_modified']), 0, -6) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr($tStatusHistory['ticket_date_modified'], -8)))); ?></strong><br />
+                <?php echo $lC_Language->get('text_status'); ?>: <strong><?php echo $tStatusHistory['ticket_status_id']; ?></strong><br />
+                <?php echo $lC_Language->get('text_priority'); ?>: <strong><?php echo $tStatusHistory['ticket_priority_id']; ?></strong><br />
+                <?php echo $lC_Language->get('text_comment_id'); ?>: <strong><?php echo $tStatusHistory['ticket_status_history_id']; ?></strong>
               </p>
             </div>
-            <div class="eight-columns twelve-columns-mobile new-row-mobile">
-              <p style="line-height:18px;">
-                <?php echo $tInfo['ticket_comments']; ?>
+            <div class="eight-columns twelve-columns-mobile new-row-mobile status-history-block-comment">
+              <p>
+                <?php echo $tStatusHistory['ticket_comments']; ?>
               </p>
-            </div>
-          </div>
-          <div class="button-height margin-bottom columns" style="border-bottom:1px solid #ccc; margin-left:0;">
-            <div class="four-columns twelve-columns-mobile new-row-mobile" style="border-right:1px solid #ccc; margin-left:-1px; padding-right:10px;">
-              <p style="line-height:18px;">
-                Last Reply by: <strong>(<?php echo $tInfo['ticket_edited_by']; ?>)</strong><br />
-                Date: <strong><?php echo $tInfo['ticket_date_modified']; ?></strong><br />
-                Status: <strong><?php echo $tInfo['ticket_status_id']; ?></strong><br />
-                Priority: <strong><?php echo $tInfo['ticket_priority_id']; ?></strong><br />
-                Comment ID: <strong><?php echo $tInfo['ticket_status_history_id']; ?></strong>
-              </p>
-            </div>
-            <div class="eight-columns twelve-columns-mobile new-row-mobile">
-              <p style="line-height:18px;">
-                <?php echo $tInfo['ticket_comments']; ?>
-              </p>
+              <?php if (!(int)($_SESSION['admin']['access'][$_module] < 4)) { ?>
+              <div class="status-history-delete-box">
+                <br />
+                <div class="status-history-delete">
+                  <a class="button compact red-gradient" href="javascript:void(0);">
+                    <?php echo $lC_Language->get('button_delete'); ?>
+                  </a>
+                </div>
+              </div>
+              <?php } ?>
             </div>
           </div>
-          <div class="button-height margin-bottom columns" style="border-bottom:1px solid #ccc; margin-left:0;">
-            <div class="four-columns twelve-columns-mobile new-row-mobile" style="border-right:1px solid #ccc; margin-left:-1px; padding-right:10px;">
-              <p style="line-height:18px;">
-                Last Reply by: <strong>(<?php echo $tInfo['ticket_edited_by']; ?>)</strong><br />
-                Date: <strong><?php echo $tInfo['ticket_date_modified']; ?></strong><br />
-                Status: <strong><?php echo $tInfo['ticket_status_id']; ?></strong><br />
-                Priority: <strong><?php echo $tInfo['ticket_priority_id']; ?></strong><br />
-                Comment ID: <strong><?php echo $tInfo['ticket_status_history_id']; ?></strong>
-              </p>
-            </div>
-            <div class="eight-columns twelve-columns-mobile new-row-mobile">
-              <p style="line-height:18px;">
-                <?php echo $tInfo['ticket_comments']; ?>
-              </p>
-            </div>
-          </div>
-          <div class="button-height margin-bottom columns" style="border-bottom:1px solid #ccc; margin-left:0;">
-            <div class="four-columns twelve-columns-mobile new-row-mobile" style="border-right:1px solid #ccc; margin-left:-1px; padding-right:10px;">
-              <p style="line-height:18px;">
-                Last Reply by: <strong>(<?php echo $tInfo['ticket_edited_by']; ?>)</strong><br />
-                Date: <strong><?php echo $tInfo['ticket_date_modified']; ?></strong><br />
-                Status: <strong><?php echo $tInfo['ticket_status_id']; ?></strong><br />
-                Priority: <strong><?php echo $tInfo['ticket_priority_id']; ?></strong><br />
-                Comment ID: <strong><?php echo $tInfo['ticket_status_history_id']; ?></strong>
-              </p>
-            </div>
-            <div class="eight-columns twelve-columns-mobile new-row-mobile">
-              <p style="line-height:18px;">
-                <?php echo $tInfo['ticket_comments']; ?>
-              </p>
-            </div>
-          </div>
+          <?php 
+            } 
+          ?>
           <div class="field-drop button-height black-inputs">
             Replies ection
           </div>
