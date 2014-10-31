@@ -26,17 +26,23 @@ class lC_Support_tickets_Admin {
     
     $result = array('aaData' => array());
     while ($Qtickets->next()) {
+
+      $Qlatestcomments = $lC_Database->query('select ticket_comments as comments, ticket_date_modified, ticket_edited_by from :table_ticket_status_history order by ticket_status_history_id desc limit 1');
+      $Qlatestcomments->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
+      $Qlatestcomments->execute();
+      
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('ticket_id') . '" id="' . $Qtickets->valueInt('ticket_id') . '"></td>';
-      $ticket = '<td><span class="tag grey-bg">' . $Qtickets->value('ticket_id') . '</span> ' . $Qtickets->value('subject') . '</td>';
-      $customer = '<td>' . $Qtickets->value('customers_name') . '</td>';
-      $status = '<td><span class="tag ' . self::getStatusColor($Qtickets->value('status_id')) . '-bg no-wrap">' . ucfirst(self::getStatusTitle($Qtickets->value('status_id'))) . '</span></td>';
-      $date = '<td>' . lC_DateTime::getShort($Qtickets->value('date_added')) . '</td>';
+      $ticket = '<td><span class="tag grey-bg">' . $Qtickets->value('ticket_id') . '</span> ' . $Qtickets->value('subject') . '<p class="small mid-margin-top"><strong class="anthracite">' . $lC_Language->get('text_ticket_latest_comments_by') . ': (' . $Qlatestcomments->value('ticket_edited_by') . ')</strong><br class="small-margin-bottom" /> ' . $Qlatestcomments->value('comments') . '</p></td>';
+      $customer = '<td><a class="strong" href="' . lc_href_link_admin(FILENAME_DEFAULT, 'customers&cID=' . $Qtickets->valueInt('customers_id')) . '" title="View customer listing" target="_blank"><span class="icon-user small-margin-right"></span> ' . $Qtickets->value('customers_name') . '</a></td>';
+      $status = '<td><span class="tag ' . self::getStatusColor($Qtickets->valueInt('status_id')) . '-bg no-wrap">' . ucfirst(self::getStatusTitle($Qtickets->valueInt('status_id'))) . '</span></td>';
+      $date = '<td>' . substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), -5)))) . '</td>';
+      $modified = '<td>' . substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), -5)))) . '</td>';
       $action = '<td class="align-right vertical-center"><span class="button-group compact">
                    <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qtickets->valueInt('ticket_id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
                    <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qtickets->valueInt('ticket_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
                  </span></td>';
 
-      $result['aaData'][] = array("$check", "$ticket", "$customer", "$status", "$date", "$action");
+      $result['aaData'][] = array("$check", "$ticket", "$customer", "$status", "$date", "$modified", "$action");
     }
 
     return $result;

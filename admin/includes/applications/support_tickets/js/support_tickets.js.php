@@ -23,9 +23,10 @@ $(document).ready(function() {
     "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
     "aoColumns": [{ "sWidth": "10px", "bSortable": false, "sClass": "dataColCheck" },
                   { "sWidth": "35%", "bSortable": true, "sClass": "dataColTicket" },
-                  { "sWidth": "25%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
+                  { "sWidth": "15%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColStatus hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColDate hide-on-mobile-portrait" },
+                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColModified hide-on-mobile-portrait" },
                   { "sWidth": "20%", "bSortable": false, "sClass": "dataColAction" }]
   });
   $('#dataTable').responsiveTable();

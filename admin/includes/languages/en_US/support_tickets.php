@@ -15,7 +15,9 @@ table_heading_ticket = Ticket
 table_heading_status = Status
 table_heading_customer = Customer
 table_heading_date_added = Created
+table_heading_date_modified = Last Modified
 table_heading_action = Action
 
 text_support_tickets_not_installed = The Support Tickets AddOn is not installed. Please click <a href="index.php?store" class="bold">here</a> and select "Other" from the list of AddOn types to install it now.
 text_support_tickets_not_enabled = The Support Tickets AddOn is not enabled. Please click <a href="index.php?store" class="bold">here</a> and select "Other" from the list of AddOn types to enable it now.
+text_ticket_latest_comments_by = Latest Comments by
