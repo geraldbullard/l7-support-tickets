@@ -28,7 +28,7 @@ class lC_Ticket_status_Admin {
     $result = array('aaData' => array());
     while ($Qdepartments->next()) {
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qdepartments->valueInt('ticket_status_id') . '" id="' . $Qdepartments->valueInt('ticket_status_id') . '"></td>';
-      $status = '<td>' . $Qdepartments->value('ticket_status_name') . '</td>';
+      $status = '<td><span class="tag ' . $Qdepartments->value('ticket_status_color') . '-bg no-wrap with-small-padding">' . $Qdepartments->value('ticket_status_name') . '</span></td>';
       $action = '<td class="align-right vertical-center"><span class="button-group compact">
                    <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qdepartments->valueInt('ticket_status_id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
                    <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qdepartments->valueInt('ticket_status_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>

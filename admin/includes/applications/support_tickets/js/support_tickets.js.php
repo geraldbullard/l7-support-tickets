@@ -22,12 +22,12 @@ $(document).ready(function() {
     "sPaginationType": paginationType, 
     "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
     "aoColumns": [{ "sWidth": "10px", "bSortable": false, "sClass": "dataColCheck" },
-                  { "sWidth": "30%", "bSortable": true, "sClass": "dataColTicket" },
+                  { "sWidth": "30%", "bSortable": false, "sClass": "dataColTicket" },
                   { "sWidth": "15%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColStatus hide-on-mobile-portrait" },
                   { "sWidth": "10%", "bSortable": true, "sClass": "dataColPriority hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColDate hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColMOdified hide-on-mobile-portrait" },
+                  { "sWidth": "10%", "bSortable": false, "sClass": "dataColDate hide-on-mobile-portrait" },
+                  { "sWidth": "10%", "bSortable": false, "sClass": "dataColModified hide-on-mobile-portrait" },
                   { "sWidth": "15%", "bSortable": false, "sClass": "dataColAction" }]
   });
   $('#dataTable').responsiveTable();

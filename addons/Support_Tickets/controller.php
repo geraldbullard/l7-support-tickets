@@ -123,6 +123,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_status (ticket_status_id INT(5) NOT NULL DEFAULT '1',
                                                                                                 ticket_language_id INT(11) NOT NULL DEFAULT '1',
                                                                                                 ticket_status_name VARCHAR(60) NOT NULL DEFAULT '',
+                                                                                                ticket_status_color VARCHAR(60) NOT NULL DEFAULT '',
                                                                                                 PRIMARY KEY (ticket_status_id, ticket_language_id)
                                                                                               ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_status_history (ticket_status_history_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -147,10 +148,11 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (3, 1, 'High');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (4, 1, 'Urgent');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (5, 1, 'Emergency');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (1, 1, 'Open');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (2, 1, 'On Hold');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Reply');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (1, 1, 'Open', 'green');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (2, 1, 'On Hold', 'red');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed', 'anthracite');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Admin Reply', 'orange');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (5, 1, 'Awaiting Customer Reply', 'blue');");
   }
  /**
   * Remove the addon

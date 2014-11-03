@@ -40,16 +40,15 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
               <p>
                 <?php echo $lC_Language->get('text_last_reply_by'); ?>: <strong>(<?php echo $tStatusHistory['ticket_edited_by']; ?>)</strong><br />
                 <?php echo $lC_Language->get('text_date'); ?>: <strong><?php echo substr(lC_DateTime::getLong($tStatusHistory['ticket_date_modified']), 0, -6) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr($tStatusHistory['ticket_date_modified'], -8)))); ?></strong><br />
-                <?php echo $lC_Language->get('text_status'); ?>: <strong><?php echo $tStatusHistory['ticket_status_id']; ?></strong><br />
-                <?php echo $lC_Language->get('text_priority'); ?>: <strong><?php echo $tStatusHistory['ticket_priority_id']; ?></strong><br />
-                <?php echo $lC_Language->get('text_comment_id'); ?>: <strong><?php echo $tStatusHistory['ticket_status_history_id']; ?></strong>
+                <?php echo $lC_Language->get('text_priority'); ?>: <strong><?php echo lC_Support_tickets_Admin::getPriorityTitle($tStatusHistory['ticket_priority_id']); ?></strong><br class="small-margin-bottom" />
+                <?php echo $lC_Language->get('text_status'); ?>: <strong><span class="tag <?php echo lC_Support_tickets_Admin::getStatusColor($tStatusHistory['ticket_status_id']); ?>-bg no-wrap with-small-padding"><?php echo lC_Support_tickets_Admin::getStatusTitle($tStatusHistory['ticket_status_id']); ?></strong>
               </p>
             </div>
             <div class="eight-columns twelve-columns-mobile new-row-mobile status-history-block-comment">
               <p>
                 <?php echo $tStatusHistory['ticket_comments']; ?>
               </p>
-              <?php if (!(int)($_SESSION['admin']['access'][$_module] < 4)) { ?>
+              <?php if ((int)($_SESSION['admin']['access'][$_module] > 4)) { ?>
               <div class="status-history-delete-box">
                 <br />
                 <div class="status-history-delete">

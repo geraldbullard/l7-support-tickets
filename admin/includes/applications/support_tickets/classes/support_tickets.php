@@ -6,7 +6,7 @@
   @copyright  Portions Copyright 2003 osCommerce
   @copyright  Template built on Developr theme by DisplayInline http://themeforest.net/user/displayinline under Extended license 
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
-  @version    $Id: support_tickets.js.php v1.0 2013-08-08 maestro $
+  @version    $Id: support_tickets.php v1.0 2013-08-08 maestro $
 */
 class lC_Support_tickets_Admin {
  /*
@@ -33,7 +33,7 @@ class lC_Support_tickets_Admin {
       
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('ticket_id') . '" id="' . $Qtickets->valueInt('ticket_id') . '"></td>';
       $ticket = '<td>
-                   <span class="tag grey-bg">' . $Qtickets->value('ticket_id') . '</span> ' . $Qtickets->value('subject') . '
+                   <span class="tag grey-bg">' . $Qtickets->valueInt('ticket_id') . '</span> ' . $Qtickets->value('subject') . '
                    <p class="small mid-margin-top">' . 
                      '<span class="strong">' . $lC_Language->get('text_ticket_latest_comments') . ': <br />' . 
                      '<span class="anthracite">' . $Qlatestcomments->value('ticket_edited_by') . '<br />' .
@@ -43,9 +43,8 @@ class lC_Support_tickets_Admin {
                    '</p>
                  </td>';
       $customer = '<td><a class="strong" href="' . lc_href_link_admin(FILENAME_DEFAULT, 'customers&cID=' . $Qtickets->valueInt('customers_id')) . '" title="' . $lC_Language->get('text_view_customer_listing') . '" target="_blank"><span class="icon-user small-margin-right"></span> ' . $Qtickets->value('customers_name') . '</a></td>';
-      $status = '<td><span class="tag ' . self::getStatusColor($Qtickets->valueInt('status_id')) . '-bg no-wrap">' . ucfirst(self::getStatusTitle($Qtickets->valueInt('status_id'))) . '</span></td>';
-      //$priority = '<td><span class="tag ' . self::getPriorityColor($Qtickets->valueInt('priority_id')) . '-bg no-wrap">' . ucfirst(self::getPriorityTitle($Qtickets->valueInt('priority_id'))) . '</span></td>';
-      $priority = '<td>&nbsp;</td>';
+      $status = '<td><span class="tag ' . self::getStatusColor($Qlatestcomments->valueInt('ticket_status_id')) . '-bg no-wrap with-small-padding">' . ucfirst(self::getStatusTitle($Qlatestcomments->valueInt('ticket_status_id'))) . '</span></td>';
+      $priority = '<td>' . self::getPriorityTitle($Qlatestcomments->valueInt('ticket_priority_id')) . '</td>';
       $date = '<td>' . substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), -5)))) . '</td>';
       $modified = '<td>' . substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), -5)))) . '</td>';
       $action = '<td class="align-right vertical-center"><span class="button-group compact">
@@ -222,19 +221,32 @@ class lC_Support_tickets_Admin {
   * @return string
   */
   public static function getStatusColor($sid = null) {
-    if ($sid == 1) {
-      $bg = 'green';
-    } else if ($sid == 2) {
-      $bg = 'orange';
-    } else if ($sid == 3) {
-      $bg = 'red';
-    } else if ($sid == 4) {
-      $bg = 'blue';
-    } else {
-      $bg = 'anthracite';
-    }
+    global $lC_Database, $lC_Language;
+
+    $Qstatuscolor = $lC_Database->query("SELECT ticket_status_color FROM :table_ticket_status WHERE ticket_status_id = :ticket_status_id AND ticket_language_id = :ticket_language_id LIMIT 1");
+    $Qstatuscolor->bindTable(':table_ticket_status', DB_TABLE_PREFIX . 'ticket_status');
+    $Qstatuscolor->bindInt(':ticket_status_id', $sid);
+    $Qstatuscolor->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qstatuscolor->execute();
     
-    return $bg;
+    return $Qstatuscolor->value('ticket_status_color');
+  }
+ /*
+  * Returns the ticket priority title
+  *
+  * @access public
+  * @return string
+  */
+  public static function getPriorityTitle($pid = null) {
+    global $lC_Database, $lC_Language;
+
+    $Qprioritytitle = $lC_Database->query("SELECT ticket_priority_name FROM :table_ticket_priority WHERE ticket_priority_id = :ticket_priority_id AND ticket_language_id = :ticket_language_id LIMIT 1");
+    $Qprioritytitle->bindTable(':table_ticket_priority', DB_TABLE_PREFIX . 'ticket_priority');
+    $Qprioritytitle->bindInt(':ticket_priority_id', $pid);
+    $Qprioritytitle->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qprioritytitle->execute();
+    
+    return $Qprioritytitle->value('ticket_priority_name');
   } 
 }
 ?>
