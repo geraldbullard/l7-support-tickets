@@ -6,7 +6,7 @@
   @copyright  Portions Copyright 2003 osCommerce
   @copyright  Template built on Developr theme by DisplayInline http://themeforest.net/user/displayinline under Extended license 
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
-  @version    $Id: support_tickets.js.php v1.0 2013-08-08 maestro $
+  @version    $Id: ticket_priority.js.php v1.0 2013-08-08 maestro $
 */
 global $lC_Template;
 ?>      
@@ -14,7 +14,6 @@ global $lC_Template;
 $(document).ready(function() {
   var paginationType = ($.template.mediaQuery.isSmallerThan('tablet-portrait')) ? 'two_button' : 'full_numbers';            
   var dataTableDataURL = '<?php echo lc_href_link_admin('rpc.php', $lC_Template->getModule() . '&action=getAll&media=MEDIA'); ?>';
-  var quickAdd = '<?php echo (isset($_GET['action']) && $_GET['action'] == 'quick_add') ? true : false; ?>';
      
   oTable = $('#dataTable').dataTable({
     "bProcessing": true,
@@ -22,12 +21,7 @@ $(document).ready(function() {
     "sPaginationType": paginationType, 
     "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
     "aoColumns": [{ "sWidth": "10px", "bSortable": false, "sClass": "dataColCheck" },
-                  { "sWidth": "30%", "bSortable": true, "sClass": "dataColTicket" },
-                  { "sWidth": "15%", "bSortable": true, "sClass": "dataColCustomer hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColStatus hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColPriority hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColDate hide-on-mobile-portrait" },
-                  { "sWidth": "10%", "bSortable": true, "sClass": "dataColMOdified hide-on-mobile-portrait" },
+                  { "sWidth": "85%", "bSortable": true, "sClass": "dataColPriority" },
                   { "sWidth": "15%", "bSortable": false, "sClass": "dataColAction" }]
   });
   $('#dataTable').responsiveTable();
@@ -45,10 +39,6 @@ $(document).ready(function() {
   if (error) {
     var errmsg = '<?php echo $_SESSION['errmsg']; ?>';
     $.modal.alert(errmsg);
-  } 
-  
-  if (quickAdd) {
-    //newTicket();
   }     
 });
   

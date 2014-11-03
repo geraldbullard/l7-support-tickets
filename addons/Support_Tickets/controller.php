@@ -114,11 +114,11 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
                                                                                                   ticket_priority_name VARCHAR(60) NOT NULL DEFAULT '',
                                                                                                   PRIMARY KEY (ticket_priority_id, ticket_language_id)
                                                                                                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-    $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_reply (ticket_reply_id INT(11) NOT NULL DEFAULT '1',
-                                                                                               ticket_language_id INT(11) NOT NULL DEFAULT '1',
-                                                                                               ticket_reply_name VARCHAR(255) NOT NULL DEFAULT '',
-                                                                                               ticket_reply_text TEXT NOT NULL,
-                                                                                               PRIMARY KEY (ticket_reply_id, ticket_language_id)
+    $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_response (ticket_response_id INT(11) NOT NULL DEFAULT '1',
+                                                                                                  ticket_language_id INT(11) NOT NULL DEFAULT '1',
+                                                                                                  ticket_response_name VARCHAR(255) NOT NULL DEFAULT '',
+                                                                                                  ticket_response_text TEXT NOT NULL,
+                                                                                                  PRIMARY KEY (ticket_response_id, ticket_language_id)
                                                                                              ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_status (ticket_status_id INT(5) NOT NULL DEFAULT '1',
                                                                                                 ticket_language_id INT(11) NOT NULL DEFAULT '1',

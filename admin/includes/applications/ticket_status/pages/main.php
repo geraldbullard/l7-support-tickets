@@ -6,7 +6,7 @@
   @copyright  Portions Copyright 2003 osCommerce
   @copyright  Template built on Developr theme by DisplayInline http://themeforest.net/user/displayinline under Extended license 
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
-  @version    $Id: tickets.js.php v1.0 2013-08-08 maestro $
+  @version    $Id: main.php v1.0 2013-08-08 maestro $
 */
 ?>
 <!-- Main content -->
@@ -17,12 +17,7 @@
   </hgroup>
   <style>
   .dataColCheck { text-align: left; }
-  .dataColTicket { text-align: left; }
-  .dataColCustomer { text-align: left; }
   .dataColStatus { text-align: left; }
-  .dataColPriority { text-align: left; }
-  .dataColDate { text-align: left; }
-  .dataColModified { text-align: left; }
   .dataColAction { text-align: right; }
   .dataTables_info { position:absolute; bottom:42px; color:#4c4c4c; }
   .selectContainer { position:absolute; bottom:29px; left:30px }
@@ -36,12 +31,7 @@
       <thead>
         <tr>
           <th scope="col" class="hide-on-mobile align-left"><input onclick="toggleCheck();" id="check-all" type="checkbox" value="1" name="check-all"></th>
-          <th scope="col" class="align-left"><?php echo $lC_Language->get('table_heading_ticket'); ?></th>
-          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_customer'); ?></th>
-          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_status'); ?></th>
-          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_priority'); ?></th>
-          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_date_added'); ?></th>
-          <th scope="col" class="align-left hide-on-mobile-portrait"><?php echo $lC_Language->get('table_heading_date_modified'); ?></th>
+          <th scope="col" class="align-left"><?php echo $lC_Language->get('table_heading_status'); ?></th>
           <th scope="col" class="align-right"><span class="button-group compact"><a href="javascript:void(0);" style="cursor:pointer" onclick="oTable.fnReloadAjax();" class="button with-tooltip icon-redo blue" title="<?php echo $lC_Language->get('button_refresh'); ?>"></a></span><span id="actionText">&nbsp;&nbsp;<?php echo $lC_Language->get('table_heading_action'); ?></span></th>
         </tr>
       </thead>
