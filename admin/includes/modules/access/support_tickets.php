@@ -8,7 +8,7 @@
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
   @version    $Id: support_tickets.php v1.0 2013-08-08 maestro $
 */
-
+if (defined('ADDONS_CATALOG_SUPPORT_TICKETS_STATUS') && @constant('ADDONS_CATALOG_SUPPORT_TICKETS_STATUS') == 1) {
   class lC_Access_Support_tickets extends lC_Access {
     var $_module = 'support_tickets',
         $_group = 'support', 
@@ -22,4 +22,5 @@
       $this->_title = $lC_Language->get('access_support_tickets_title');
     }
   }
+}
 ?>

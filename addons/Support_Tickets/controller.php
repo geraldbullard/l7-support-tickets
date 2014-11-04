@@ -165,6 +165,13 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
   */
   public function remove() {
     global $lC_Database;
+    
+    if ($this->hasKeys()) {
+      $Qdel = $lC_Database->query('delete from :table_configuration where configuration_key in (":configuration_key")');
+      $Qdel->bindTable(':table_configuration', TABLE_CONFIGURATION);
+      $Qdel->bindRaw(':configuration_key', implode('", "', $this->getKeys()));
+      $Qdel->execute();
+    }
 
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "tickets;");
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_admins;");
@@ -181,21 +188,8 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     unlink(DIR_FS_CATALOG . 'includes/modules/boxes/ticket.php');
     
     // Remove catalog side directories
-    $c_content_ticket = DIR_FS_CATALOG . 'includes/content/ticket/';
-    foreach (glob($c_content_ticket . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($c_content_ticket);
-    
-    $c_template_content_ticket = DIR_FS_CATALOG . 'templates/core/content/ticket/';
-    foreach (glob($c_template_content_ticket . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($c_template_content_ticket);
+    self::recursiveRemove(DIR_FS_CATALOG . 'includes/content/ticket/');
+    self::recursiveRemove(DIR_FS_CATALOG . 'templates/core/content/ticket/');
     
     // Remove admin side files 
     unlink(DIR_FS_ADMIN . 'includes/languages/en_US/support_tickets.php');
@@ -216,45 +210,11 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     unlink(DIR_FS_ADMIN . 'templates/default/css/support_tickets.css');
     
     // Remove admin side directories
-    $a_app_support_tickets = DIR_FS_ADMIN . 'includes/applications/support_tickets/';
-    foreach (glob($a_app_support_tickets . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($a_app_support_tickets);
-    
-    $a_app_ticket_department = DIR_FS_ADMIN . 'includes/applications/ticket_department/';
-    foreach (glob($a_app_ticket_department . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($a_app_ticket_department);
-    
-    $a_app_ticket_priority = DIR_FS_ADMIN . 'includes/applications/ticket_priority/';
-    foreach (glob($a_app_ticket_priority . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($a_app_ticket_priority);
-    
-    $a_app_ticket_response = DIR_FS_ADMIN . 'includes/applications/ticket_response/';
-    foreach (glob($a_app_ticket_response . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($a_app_ticket_response);
-    
-    $a_app_ticket_status = DIR_FS_ADMIN . 'includes/applications/ticket_status/';
-    foreach (glob($a_app_ticket_status . '*') as $filename) {
-      if (is_file($filename)) {
-        unlink($filename);
-      }
-    }
-    rmdir($a_app_ticket_status);
+    /*self::recursiveRemove(DIR_FS_ADMIN . 'includes/applications/support_tickets/');
+    self::recursiveRemove(DIR_FS_ADMIN . 'includes/applications/ticket_department/');
+    self::recursiveRemove(DIR_FS_ADMIN . 'includes/applications/ticket_priority/');
+    self::recursiveRemove(DIR_FS_ADMIN . 'includes/applications/ticket_response/');
+    self::recursiveRemove(DIR_FS_ADMIN . 'includes/applications/ticket_status/');*/
   }
  /**
   * Return the configuration parameter keys array
@@ -268,6 +228,27 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     }
 
     return $this->_keys;
-  }  
+  }
+ /**
+  * Recursively remove a directory and all of it's subfolders and files
+  *
+  * @access public 
+  */
+  public function recursiveRemove($dir) {
+    $dh = opendir($dir);
+    if ($dh) {
+      while($file = readdir($dh)) {
+        if (!in_array($file, array('.', '..'))) {
+          if (is_file($dir . $file)) {
+            unlink($dir . $file);
+          }
+          else if (is_dir($dir . $file)) {
+            recursiveRemove($dir . $file);
+          }
+        }
+      }
+      rmdir($dir);
+    }
+  }
 }
 ?>
