@@ -47,25 +47,4 @@ $(document).ready(function() {
     newEntry();
   }     
 });
-  
-function validateForm(e) {
-  // turn off messages
-  jQuery.validator.messages.required = "";
-
-  var tid = '<?php echo $_GET[$lC_Template->getModule()]; ?>';
-  var bValid = $("#ticket").validate({ 
-    invalidHandler: function(event, validator) {
-    },
-    ignore: "",
-    rules: {
-    },
-    messages: {
-    }, 
-  }).form();
-  if (bValid) {
-    $(e).submit();
-  }
-
-  return false;
-}
 </script>

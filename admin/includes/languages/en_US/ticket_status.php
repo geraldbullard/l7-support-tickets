@@ -8,5 +8,11 @@
 
 heading_title = Ticket Statuses
 
+button_new_status = New Status
+
+introduction_delete_ticket_status = Are you sure you wish to delete the following ticket status?
+
+modal_heading_delete_ticket_status = Delete Ticket Status
+
 table_heading_action = Action
 table_heading_status = Status

@@ -24,5 +24,56 @@ class lC_Ticket_status_Admin_rpc {
 
     echo json_encode($result);
   }
+ /*
+  * Return the data used on the dialog forms
+  *
+  * @param integer $_GET['sid'] The ticket status id
+  * @param boolean $edit True = called from edit dialog else called from delete dialog
+  * @access public
+  * @return json
+  */
+  public static function getFormData() {
+    $result = lC_Ticket_status_Admin::getFormData($_GET['sid']);
+    
+    if (!isset($result['rpcStatus'])) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+
+    echo json_encode($result);
+  }
+ /*
+  * Delete the ticket status record
+  *
+  * @param integer $_GET['sid'] The ticket status id to delete
+  * @access public
+  * @return json
+  */    
+  public static function deleteEntry() {
+    $result = array();
+    $deleted = lC_Ticket_status_Admin::delete($_GET['sid']);
+    
+    if ($deleted) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+
+    echo json_encode($result);
+  }
+ /*
+  * Batch delete ticket status records
+  *
+  * @param array $_GET['batch'] An array of ticket status id's
+  * @access public
+  * @return json
+  */ 
+  public static function batchDeleteEntries() {
+    $result = array();
+    $deleted = lC_Ticket_status_Admin::batchDelete($_GET['batch']);
+    
+    if ($deleted) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+
+    echo json_encode($result);
+  } 
 }
 ?>
