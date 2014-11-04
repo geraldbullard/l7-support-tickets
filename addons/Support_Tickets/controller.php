@@ -153,6 +153,9 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed', 'anthracite');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Admin Reply', 'orange');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (5, 1, 'Awaiting Customer Reply', 'blue');");
+    
+    // Enter Configuration Group and Values
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "configuration_group (configuration_group_id, configuration_group_title, configuration_group_description, sort_order, visible) VALUES (429, 'Support Tickets', 'Settings for the Support Ticket System.', 429, 0);");
   }
  /**
   * Remove the addon
@@ -170,6 +173,88 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_response;");
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_status;");
     $lC_Database->simpleQuery("DROP TABLE IF EXISTS " . DB_TABLE_PREFIX . "ticket_status_history;");
+    
+    // Remove catalog side files
+    unlink(DIR_FS_CATALOG . 'ticket.php');
+    unlink(DIR_FS_CATALOG . 'templates/core/modules/boxes/ticket.php');
+    unlink(DIR_FS_CATALOG . 'includes/languages/en_US/modules/boxes/ticket.xml');
+    unlink(DIR_FS_CATALOG . 'includes/modules/boxes/ticket.php');
+    
+    // Remove catalog side directories
+    $c_content_ticket = DIR_FS_CATALOG . 'includes/content/ticket/';
+    foreach (glob($c_content_ticket . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($c_content_ticket);
+    
+    $c_template_content_ticket = DIR_FS_CATALOG . 'templates/core/content/ticket/';
+    foreach (glob($c_template_content_ticket . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($c_template_content_ticket);
+    
+    // Remove admin side files 
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/support_tickets.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/ticket_department.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/ticket_priority.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/ticket_response.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/ticket_status.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/modules/access/support_tickets.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/modules/access/ticket_department.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/modules/access/ticket_priority.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/modules/access/ticket_response.php');
+    unlink(DIR_FS_ADMIN . 'includes/languages/en_US/modules/access/ticket_status.php');
+    unlink(DIR_FS_ADMIN . 'includes/modules/access/support_tickets.php');
+    unlink(DIR_FS_ADMIN . 'includes/modules/access/ticket_department.php');
+    unlink(DIR_FS_ADMIN . 'includes/modules/access/ticket_priority.php');
+    unlink(DIR_FS_ADMIN . 'includes/modules/access/ticket_response.php');
+    unlink(DIR_FS_ADMIN . 'includes/modules/access/ticket_status.php');
+    unlink(DIR_FS_ADMIN . 'templates/default/css/support_tickets.css');
+    
+    // Remove admin side directories
+    $a_app_support_tickets = DIR_FS_ADMIN . 'includes/applications/support_tickets/';
+    foreach (glob($a_app_support_tickets . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($a_app_support_tickets);
+    
+    $a_app_ticket_department = DIR_FS_ADMIN . 'includes/applications/ticket_department/';
+    foreach (glob($a_app_ticket_department . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($a_app_ticket_department);
+    
+    $a_app_ticket_priority = DIR_FS_ADMIN . 'includes/applications/ticket_priority/';
+    foreach (glob($a_app_ticket_priority . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($a_app_ticket_priority);
+    
+    $a_app_ticket_response = DIR_FS_ADMIN . 'includes/applications/ticket_response/';
+    foreach (glob($a_app_ticket_response . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($a_app_ticket_response);
+    
+    $a_app_ticket_status = DIR_FS_ADMIN . 'includes/applications/ticket_status/';
+    foreach (glob($a_app_ticket_status . '*') as $filename) {
+      if (is_file($filename)) {
+        unlink($filename);
+      }
+    }
+    rmdir($a_app_ticket_status);
   }
  /**
   * Return the configuration parameter keys array

@@ -128,12 +128,12 @@ class lC_Ticket_status_Admin {
 
     if ( $error === false ) {
       if ($default === true) {
-        /*$Qupdate = $lC_Database->query('update :table_configuration set configuration_value = :configuration_value where configuration_key = :configuration_key');
-        $Qupdate->bindTable(':table_configuration', TABLE_CONFIGURATION);
-        $Qupdate->bindInt(':configuration_value', $ticket_status_id);
-        $Qupdate->bindValue(':configuration_key', 'DEFAULT_ORDERS_STATUS_ID');
-        $Qupdate->setLogging($_SESSION['module'], $ticket_status_id);
-        $Qupdate->execute();
+        /*$Qdefaultconfig = $lC_Database->query('update :table_configuration set configuration_value = :configuration_value where configuration_key = :configuration_key');
+        $Qdefaultconfig->bindTable(':table_configuration', TABLE_CONFIGURATION);
+        $Qdefaultconfig->bindInt(':configuration_value', $ticket_status_id);
+        $Qdefaultconfig->bindValue(':configuration_key', 'DEFAULT_TICKET_STATUS_ID');
+        $Qdefaultconfig->setLogging($_SESSION['module'], $ticket_status_id);
+        $Qdefaultconfig->execute();
 
         if ( $lC_Database->isError() ) {
           $error = true;
