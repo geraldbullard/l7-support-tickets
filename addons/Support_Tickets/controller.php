@@ -97,7 +97,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
                                                                                           last_modified datetime DEFAULT '0000-00-00 00:00:00',
                                                                                           last_customer_modified DATETIME DEFAULT '0000-00-00 00:00:00',
                                                                                           login_required TINYINT(4) DEFAULT '0',
-                                                                                          PRIMARY KEY (id)
+                                                                                          PRIMARY KEY (ticket_id)
                                                                                         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_admins (ticket_admin_id INT(11) NOT NULL DEFAULT '1',
                                                                                                 ticket_language_id INT(11) NOT NULL DEFAULT '1',
