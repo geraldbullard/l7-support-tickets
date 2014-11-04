@@ -97,7 +97,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
                                                                                           last_modified datetime DEFAULT '0000-00-00 00:00:00',
                                                                                           last_customer_modified DATETIME DEFAULT '0000-00-00 00:00:00',
                                                                                           login_required TINYINT(4) DEFAULT '0',
-                                                                                          PRIMARY KEY (ticket_id)
+                                                                                          PRIMARY KEY (ticket_id, customers_id)
                                                                                         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_admins (ticket_admin_id INT(11) NOT NULL DEFAULT '1',
                                                                                                 ticket_language_id INT(11) NOT NULL DEFAULT '1',
@@ -153,6 +153,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed', 'anthracite');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Admin Reply', 'orange');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (5, 1, 'Awaiting Customer Reply', 'blue');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_response VALUES (1, 1, 'Support Request Received', 'We have received your request for support and will reply as soon as we have more information about your issue. Thank you for using our Support Ticket System!');");
     
     // Enter Configuration Group and Values
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "configuration_group (configuration_group_id, configuration_group_title, configuration_group_description, sort_order, visible) VALUES (429, 'Support Tickets', 'Settings for the Support Ticket System.', 429, 0);");
