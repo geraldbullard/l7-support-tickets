@@ -30,7 +30,7 @@ class lC_Ticket_status_Admin {
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qstatus->valueInt('ticket_status_id') . '" id="' . $Qstatus->valueInt('ticket_status_id') . '"></td>';
       $status = '<td><span class="tag ' . $Qstatus->value('ticket_status_color') . '-bg no-wrap with-small-padding">' . $Qstatus->value('ticket_status_name') . '</span></td>';
       $action = '<td class="align-right vertical-center"><span class="button-group compact">
-                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qstatus->valueInt('ticket_status_id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
+                   <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : 'javascript://" onclick="editEntry(\'' . $Qstatus->valueInt('ticket_status_id') . '\')') . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
                    <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qstatus->valueInt('ticket_status_id') . '\', \'' . $Qstatus->value('ticket_status_name') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
                  </span></td>';
 
@@ -51,26 +51,26 @@ class lC_Ticket_status_Admin {
 
     $result = array();
     foreach ($lC_Language->getAll() as $l) {
-      $result['stName'] .= '<span class="input" style="width:88%"><label for="name[' . $l['id'] . ']" class="button silver-gradient glossy">' . $lC_Language->showImage($l['code']) . '</label>' . lc_draw_input_field('ticket_status_name[' . $l['id'] . ']', null, 'class="input-unstyled"') . '</span><br />';
+      $result['tsName'] .= '<span class="input" style="width:88%"><label for="name[' . $l['id'] . ']" class="button silver-gradient glossy">' . $lC_Language->showImage($l['code']) . '</label>' . lc_draw_input_field('ticket_status_name[' . $l['id'] . ']', null, 'class="input-unstyled"') . '</span><br />';
     }
 
-    /*if ($id != null && is_numeric($id)) {
-      $manufacturers_array = array();
-      $Qmanufacturer = $lC_Database->query('select manufacturers_url, languages_id from :table_manufacturers_info where manufacturers_id = :manufacturers_id');
-      $Qmanufacturer->bindTable(':table_manufacturers_info', TABLE_MANUFACTURERS_INFO);
-      $Qmanufacturer->bindInt(':manufacturers_id', $id);
-      $Qmanufacturer->execute();
+    if ($id != null && is_numeric($id)) {
+      $ticket_status_array = array();
+      $Qticketstatus = $lC_Database->query('select * from :table_ticket_status where ticket_status_id = :ticket_status_id');
+      $Qticketstatus->bindTable(':table_ticket_status', DB_TABLE_PREFIX . 'ticket_status');
+      $Qticketstatus->bindInt(':ticket_status_id', $id);
+      $Qticketstatus->execute();
 
-      while ($Qmanufacturer->next()) {
-        $manufacturers_array[$Qmanufacturer->valueInt('languages_id')] = $Qmanufacturer->value('manufacturers_url');
+      while ($Qticketstatus->next()) {
+        $ticket_status_array[$Qticketstatus->valueInt('ticket_language_id')] = $Qticketstatus->value('ticket_status_name');
       }
       
       foreach ($lC_Language->getAll() as $l) {
-        $result['editStName'] .= '<span class="input" style="width:88%"><label for="name[' . $l['id'] . ']" class="button silver-gradient glossy">' . $lC_Language->showImage($l['code']) . '</label>' . lc_draw_input_field('manufacturers_url[' . $l['id'] . ']', $manufacturers_array[$l['id']], 'class="input-unstyled"') . '</span><br />';
+        $result['editTsName'] .= '<span class="input" style="width:88%"><label for="ticket_status_name[' . $l['id'] . ']" class="button silver-gradient glossy">' . $lC_Language->showImage($l['code']) . '</label>' . lc_draw_input_field('ticket_status_name[' . $l['id'] . ']', $ticket_status_array[$l['id']], 'class="input-unstyled"') . '</span><br />';
       }
       
-      $result['tsData'] = lC_Manufacturers_Admin::getData($id, $lC_Language->getID());
-    }*/
+      //$result['tsData'] = lC_Ticket_status_Admin::getData($id, $lC_Language->getID());
+    }
 
     return $result;
   }
@@ -94,6 +94,13 @@ class lC_Ticket_status_Admin {
       $ticket_status_id = $id;
       // ISSUE: if we add a new language, editing values does not save the new language.
       // To cure this, we delete the old records first, then re-insert instead of update.
+      $Qcolor = $lC_Database->query('select ticket_status_color from :table_ticket_status where ticket_status_id = :ticket_status_id');
+      $Qcolor->bindTable(':table_ticket_status', DB_TABLE_PREFIX . 'ticket_status');
+      $Qcolor->bindInt(':ticket_status_id', $id);
+      $Qcolor->execute();
+
+      $ticket_status_color = $Qcolor->value('ticket_status_color');
+      
       lC_Ticket_status_Admin::delete($ticket_status_id);
     } else {
       $Qstatus = $lC_Database->query('select max(ticket_status_id) as ticket_status_id from :table_ticket_status');
@@ -108,7 +115,7 @@ class lC_Ticket_status_Admin {
       $Qstatus->bindTable(':table_ticket_status', DB_TABLE_PREFIX . 'ticket_status');
       $Qstatus->bindInt(':ticket_status_id', $ticket_status_id);
       $Qstatus->bindValue(':ticket_status_name', $data['ticket_status_name'][$l['id']]);
-      $Qstatus->bindValue(':ticket_status_color', 'grey');
+      $Qstatus->bindValue(':ticket_status_color', (($ticket_status_color != null) ? $ticket_status_color : 'grey'));
       $Qstatus->bindInt(':ticket_language_id', $l['id']);
       $Qstatus->setLogging($_SESSION['module'], $ticket_status_id);
       $Qstatus->execute();

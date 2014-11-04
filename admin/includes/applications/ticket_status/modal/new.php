@@ -35,7 +35,7 @@ function newEntry() {
                    '  <div id="newEntryForm">'+
                    '    <form name="sNew" id="sNew" action="<?php echo lc_href_link_admin(FILENAME_DEFAULT, $lC_Template->getModule() . '&action=save'); ?>" method="post" enctype="multipart/form-data">'+
                    '      <p class="button-height inline-label">'+
-                   '        <label for="name" class="label" style="width:33%;"><?php echo $lC_Language->get('field_ticket_status_name'); ?></label>'+
+                   '        <label for="ticket_status_name" class="label" style="width:33%;"><?php echo $lC_Language->get('field_ticket_status_name'); ?></label>'+
                    '        <span id="fieldStatus"></span>'+
                    '      </p>'+
                    '      <p class="button-height inline-label">'+
@@ -79,7 +79,7 @@ function newEntry() {
           },
           buttonsLowPadding: true
       });
-      $("#fieldStatus").html(data.stName);
+      $("#fieldStatus").html(data.tsName);
     }
   );
 }

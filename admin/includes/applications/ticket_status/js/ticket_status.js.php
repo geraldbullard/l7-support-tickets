@@ -9,7 +9,6 @@
   @version    $Id: ticket_status.js.php v1.0 2013-08-08 maestro $
 */
 global $lC_Template;
-$_SESSION['error'] = null;
 ?>      
 <script>
 $(document).ready(function() {
