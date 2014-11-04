@@ -24,7 +24,7 @@ class lC_Application_Ticket_status extends lC_Template_Admin {
   function __construct() {
     global $lC_Language;
 
-    $this->_page_title = $lC_Language->get('heading_title');
+    $this->_page_title = $lC_Language->get('heading_title'); 
 
     if ( !isset($_GET['action']) ) {
       $_GET['action'] = '';
@@ -41,10 +41,11 @@ class lC_Application_Ticket_status extends lC_Template_Admin {
           * @access public
           * @return boolean
           */
-          $data = array(/*'name' => $_POST['manufacturers_name'],
-                        'url' => $_POST['manufacturers_url']*/);
-
-          if ( lC_Ticket_status_Admin::save((isset($_GET['sID']) && is_numeric($_GET['sID']) ? $_GET['sID'] : null), $data) ) { 
+          $data = array('ticket_status_name' => $_POST['ticket_status_name']);
+          
+          $default = ((isset($_POST['default']) && $_POST['default'] == 'on') ? true : false);
+          
+          if (lC_Ticket_status_Admin::save((isset($_GET['sID']) && is_numeric($_GET['sID']) ? $_GET['sID'] : null), $data, $default)) { 
             lc_redirect_admin(lc_href_link_admin(FILENAME_DEFAULT, $this->_module));
           } else {
             $_SESSION['error'] = true;

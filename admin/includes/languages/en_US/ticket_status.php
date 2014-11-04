@@ -10,9 +10,14 @@ heading_title = Ticket Statuses
 
 button_new_status = New Status
 
+field_set_as_default = Set as default?
+field_ticket_status_name = Status Name
+
 introduction_delete_ticket_status = Are you sure you wish to delete the following ticket status?
+introduction_new_ticket_status = Please fill in the following information for the new ticket status.
 
 modal_heading_delete_ticket_status = Delete Ticket Status
+modal_heading_new_ticket_status = New Ticket Status
 
 table_heading_action = Action
 table_heading_status = Status
