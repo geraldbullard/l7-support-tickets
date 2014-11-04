@@ -25,6 +25,34 @@ class lC_Application_Ticket_status extends lC_Template_Admin {
     global $lC_Language;
 
     $this->_page_title = $lC_Language->get('heading_title');
+
+    if ( !isset($_GET['action']) ) {
+      $_GET['action'] = '';
+    }
+
+    if ( !empty($_GET['action']) ) {
+      switch ( $_GET['action'] ) {
+        case 'save':
+          /*
+          * Save the ticket staus information
+          *
+          * @param integer $_GET['sID'] The ticket status id
+          * @param array $data The status information
+          * @access public
+          * @return boolean
+          */
+          $data = array(/*'name' => $_POST['manufacturers_name'],
+                        'url' => $_POST['manufacturers_url']*/);
+
+          if ( lC_Ticket_status_Admin::save((isset($_GET['sID']) && is_numeric($_GET['sID']) ? $_GET['sID'] : null), $data) ) { 
+            lc_redirect_admin(lc_href_link_admin(FILENAME_DEFAULT, $this->_module));
+          } else {
+            $_SESSION['error'] = true;
+            $_SESSION['errmsg'] = $lC_Language->get('ms_error_action_not_performed');
+          }
+          break;
+      }
+    }
   }
 }
 ?>

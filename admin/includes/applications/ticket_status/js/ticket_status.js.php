@@ -14,6 +14,8 @@ global $lC_Template;
 $(document).ready(function() {
   var paginationType = ($.template.mediaQuery.isSmallerThan('tablet-portrait')) ? 'two_button' : 'full_numbers';            
   var dataTableDataURL = '<?php echo lc_href_link_admin('rpc.php', $lC_Template->getModule() . '&action=getAll&media=MEDIA'); ?>';
+  var quickAdd = '<?php echo (isset($_GET['action']) && $_GET['action'] == 'quick_add') ? true : false; ?>';     
+  var error = '<?php echo $_SESSION['error']; ?>';
      
   oTable = $('#dataTable').dataTable({
     "bProcessing": true,
@@ -34,11 +36,15 @@ $(document).ready(function() {
     $('#actionText').hide();
     $('.on-mobile').show();
     $('.selectContainer').hide();
-  }     
-  var error = '<?php echo $_SESSION['error']; ?>';
+  }
+  
   if (error) {
     var errmsg = '<?php echo $_SESSION['errmsg']; ?>';
     $.modal.alert(errmsg);
+  } 
+  
+  if (quickAdd) {
+    newEntry();
   }     
 });
   
