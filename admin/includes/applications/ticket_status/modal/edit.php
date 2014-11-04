@@ -14,6 +14,7 @@
 </style>
 <script>
 function editEntry(id) {
+  //var defaultId = '<?php //echo DEFAULT_TICKET_STATUS_ID; ?>';
   var accessLevel = '<?php echo $_SESSION['admin']['access'][$lC_Template->getModule()]; ?>';
   if (parseInt(accessLevel) < 3) {
     $.modal.alert('<?php echo $lC_Language->get('ms_error_no_access');?>');
@@ -39,6 +40,7 @@ function editEntry(id) {
                    '        <label for="ticket_status_name" class="label" style="width:33%;"><?php echo $lC_Language->get('field_ticket_status_name'); ?></label>'+
                    '        <span id="editTsName"></span>'+
                    '      </p>'+
+                   //'      <p class="button-height inline-label" id="editTicketStatusDefault"></p>'+
                    '    </form>'+
                    '  </div>'+
                    '</div>',
@@ -79,8 +81,10 @@ function editEntry(id) {
           },
           buttonsLowPadding: true
       });
-      //$("#editTicketStatusName").val(data.tsData.ticketStatusDefault);
       $("#editTsName").html(data.editTsName);
+      //if (id != defaultId) {
+      //  $("#editTicketStatusDefault").html('<label for="default" class="label"><?php echo $lC_Language->get('field_set_as_default'); ?></label><?php echo '&nbsp;' . lc_draw_checkbox_field('default', null, null, 'class="switch medium" data-text-on="' . strtoupper($lC_Language->get('button_yes')) . '" data-text-off="' . strtoupper($lC_Language->get('button_no')) . '"'); ?>');
+      //}
     }
   );
 }
