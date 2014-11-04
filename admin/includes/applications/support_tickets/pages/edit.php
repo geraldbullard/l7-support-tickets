@@ -33,6 +33,7 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
         <fieldset class="fieldset">
           <legend class="legend"><?php echo $lC_Language->get('legend_ticket_details'); ?></legend>
           <?php
+            $tshID = 0;
             foreach ($tInfo as $tStatusHistory) {
           ?>
           <div class="button-height margin-bottom columns status-history-block">
@@ -61,10 +62,32 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
             </div>
           </div>
           <?php 
-            } 
+              $tshID++;
+            }
           ?>
           <div class="field-drop button-height black-inputs">
-            Replies ection
+            <div class="columns no-margin-bottom">
+              <div class="five-columns twelve-columns-mobile new-row-mobile align-right" style="margin-left:-200px;">
+                <div class="columns">
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_status'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketStatusDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
+                  </div>
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_priority'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketPriorityDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                  </div>
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_department'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketDepartmentDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                  </div>
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_response'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketResponseDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                  </div>
+                </div>
+              </div>            
+            </div>
           </div>
         </fieldset>
       </div> 

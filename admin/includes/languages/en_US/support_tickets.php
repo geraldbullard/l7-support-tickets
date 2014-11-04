@@ -27,3 +27,6 @@ text_last_reply_by = Last reply by
 text_date = Date
 text_priority = Priority
 text_comment_id = Comment ID
+text_status = Status
+text_department = Department
+text_response = Response

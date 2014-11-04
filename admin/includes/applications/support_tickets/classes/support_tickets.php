@@ -185,6 +185,106 @@ class lC_Support_tickets_Admin {
     return $result;
   }
  /*
+  * Return the ticket status dropdown
+  *
+  * @access public
+  * @return array
+  */ 
+  public static function drawTicketStatusDropdown($tid, $classes = null) {
+    $data = self::get($tid);
+    
+    $tsDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
+    $tsDropdown .= '<option value="-1">Select Status</option>';
+    $tsDropdown .= '<option value="1">Select Status</option>';
+    $tsDropdown .= '<option value="2">Select Status</option>';
+    $tsDropdown .= '<option value="3">Select Status</option>';
+    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+      $tsDropdown .= '<option value="' . $id . '"';
+      if ($data['ticketStatusID'] == $id) {
+        $tsDropdown .= ' selected="selected"';
+      }
+      $tsDropdown .= '>' . $val . '</option>';
+    }*/
+    $tsDropdown .= '</select>';
+    
+    return $tsDropdown;
+  }
+ /*
+  * Return the ticket priority dropdown
+  *
+  * @access public
+  * @return array
+  */ 
+  public static function drawTicketPriorityDropdown($tid, $classes = null) {
+    $data = self::get($tid);
+    
+    $tpDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
+    $tpDropdown .= '<option value="-1">Select Priority</option>';
+    $tpDropdown .= '<option value="1">Select Priority</option>';
+    $tpDropdown .= '<option value="2">Select Priority</option>';
+    $tpDropdown .= '<option value="3">Select Priority</option>';
+    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+      $tpDropdown .= '<option value="' . $id . '"';
+      if ($data['ticketStatusID'] == $id) {
+        $tpDropdown .= ' selected="selected"';
+      }
+      $tpDropdown .= '>' . $val . '</option>';
+    }*/
+    $tpDropdown .= '</select>';
+    
+    return $tpDropdown;
+  }
+ /*
+  * Return the ticket department dropdown
+  *
+  * @access public
+  * @return array
+  */ 
+  public static function drawTicketDepartmentDropdown($tid, $classes = null) {
+    $data = self::get($tid);
+    
+    $tdDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
+    $tdDropdown .= '<option value="-1">Select Department</option>';
+    $tdDropdown .= '<option value="1">Select Department</option>';
+    $tdDropdown .= '<option value="2">Select Department</option>';
+    $tdDropdown .= '<option value="3">Select Department</option>';
+    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+      $tdDropdown .= '<option value="' . $id . '"';
+      if ($data['ticketStatusID'] == $id) {
+        $tdDropdown .= ' selected="selected"';
+      }
+      $tdDropdown .= '>' . $val . '</option>';
+    }*/
+    $tdDropdown .= '</select>';
+    
+    return $tdDropdown;
+  }
+ /*
+  * Return the ticket response dropdown
+  *
+  * @access public
+  * @return array
+  */ 
+  public static function drawTicketResponseDropdown($tid, $classes = null) {
+    $data = self::get($tid);
+    
+    $trDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
+    $trDropdown .= '<option value="-1">Select Response</option>';
+    $trDropdown .= '<option value="1">Select Response</option>';
+    $trDropdown .= '<option value="2">Select Response</option>';
+    $trDropdown .= '<option value="3">Select Response</option>';
+    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+      $trDropdown .= '<option value="' . $id . '"';
+      if ($data['ticketStatusID'] == $id) {
+        $trDropdown .= ' selected="selected"';
+      }
+      $trDropdown .= '>' . $val . '</option>';
+    }*/
+    $trDropdown .= '</select>';
+    
+    return $trDropdown;
+  }
+ /*
   * Returns the number of open tickets
   *
   * @access public
