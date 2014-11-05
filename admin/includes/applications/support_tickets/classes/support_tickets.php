@@ -27,8 +27,9 @@ class lC_Support_tickets_Admin {
     $result = array('aaData' => array());
     while ($Qtickets->next()) {
 
-      $Qlatestcomments = $lC_Database->query('select * from :table_ticket_status_history order by ticket_status_history_id desc limit 1');
+      $Qlatestcomments = $lC_Database->query('select * from :table_ticket_status_history where ticket_id = :ticket_id order by ticket_status_history_id desc limit 1');
       $Qlatestcomments->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
+      $Qlatestcomments->bindInt(':ticket_id', $Qtickets->valueInt('ticket_id'));
       $Qlatestcomments->execute();
       
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('ticket_id') . '" id="' . $Qtickets->valueInt('ticket_id') . '"></td>';
@@ -55,8 +56,11 @@ class lC_Support_tickets_Admin {
                      <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteTicket(\'' . $Qtickets->valueInt('ticket_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
                    </span>
                  </span></td>';
+                 
+      $Qlatestcomments->freeResult();                 
 
       $result['aaData'][] = array("$check", "$ticket", "$customer", "$status", "$priority", "$date", "$modified", "$action");
+      
     }
 
     return $result;
@@ -112,7 +116,7 @@ class lC_Support_tickets_Admin {
       $Qticket->bindInt(':ticket_id', $id);
     } else {
       $Qticket = $lC_Database->query('insert into :table_tickets (link_id, customers_id, customers_email, customers_name, orders_id, subject, status_id, department_id, priority_id, date_added, last_modified, login_required) values (:link_id, :customers_id, :customers_email, :customers_name, :orders_id, :subject, :status_id, :department_id, :priority_id, :date_added, :last_modified, :login_required);');
-      $Qticket->bindValue(':link_id', 'dhfnfgsbsh');
+      $Qticket->bindValue(':link_id', substr(str_shuffle("abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ"), 0, 1) . substr(str_shuffle("23456789abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ"), 0, 11));
       $Qticket->bindInt(':customers_id', $data['ticket_customer_id']);
       $Qticket->bindValue(':customers_email', $Qcustomer->value('customers_email_address'));
       $Qticket->bindValue(':customers_name', $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'));
