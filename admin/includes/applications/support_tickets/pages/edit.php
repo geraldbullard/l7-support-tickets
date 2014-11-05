@@ -137,7 +137,7 @@ if (is_numeric($_GET[$lC_Template->getModule()])) {
                   </div>
                   <div class="twelve-columns small-margin-bottom">
                     <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_login_required'); ?></font>
-                    <input name="login_required" type="checkbox" class="switch"<?php echo ($tInfo[0]['login_required'] == '1' ? ' checked' : null); ?> data-text-on="<?php echo $lC_Language->get('text_yes'); ?>" data-text-off="<?php echo $lC_Language->get('text_no'); ?>">
+                    <input name="login_required" type="checkbox" class="switch"<?php echo (isset($tInfo) ? ($tInfo[0]['login_required'] == '1' ? ' checked' : null) : ' checked'); ?> data-text-on="<?php echo $lC_Language->get('text_yes'); ?>" data-text-off="<?php echo $lC_Language->get('text_no'); ?>">
                   </div>
                 </div>
               </div>
