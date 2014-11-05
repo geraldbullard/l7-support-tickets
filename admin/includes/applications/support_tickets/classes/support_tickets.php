@@ -71,7 +71,7 @@ class lC_Support_tickets_Admin {
   public static function get($id) {
     global $lC_Database, $lC_Language;
 
-    $Qticket = $lC_Database->query('select t.*, tsh.* from :table_tickets t left join :table_ticket_status_history tsh on (t.ticket_id = tsh.ticket_id) where t.ticket_id = :ticket_id');
+    $Qticket = $lC_Database->query('select t.*, tsh.* from :table_tickets t left join :table_ticket_status_history tsh on (t.ticket_id = tsh.ticket_id) where t.ticket_id = :ticket_id order by tsh.ticket_status_history_id asc');
     $Qticket->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
     $Qticket->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
     $Qticket->bindInt(':ticket_id', $id);
@@ -351,6 +351,26 @@ class lC_Support_tickets_Admin {
     $Qprioritytitle->execute();
     
     return $Qprioritytitle->value('ticket_priority_name');
+  }
+ /*
+  * Returns the ticket priority title
+  *
+  * @access public
+  * @return string
+  */
+  public static function deleteStatusHistory($shid = null) {
+    global $lC_Database;
+
+    $QdelStatHist = $lC_Database->query("DELETE FROM :table_ticket_status_history WHERE ticket_status_history_id = :ticket_status_history_id LIMIT 1");
+    $QdelStatHist->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
+    $QdelStatHist->bindInt(':ticket_status_history_id', $shid);
+    $QdelStatHist->execute();
+    
+    if ($lC_Database->isError()) {
+      return false;
+    } else {
+      return true;
+    }
   } 
 }
 ?>

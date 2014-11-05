@@ -36,5 +36,18 @@ class lC_Support_tickets_Admin_rpc {
     
     echo json_encode($result);
   }
+ /*
+  * Deletes the status history row matching the shid from the $_GET
+  *
+  * @access public
+  * @return json
+  */
+  public static function deleteStatusHistoryBlock() {
+    if (lC_Support_tickets_Admin::deleteStatusHistory($_GET['shid']) == 1) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    } 
+    
+    echo json_encode($result);
+  }
 }
 ?>

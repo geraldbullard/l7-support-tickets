@@ -36,7 +36,7 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
             $tshID = 0;
             foreach ($tInfo as $tStatusHistory) {
           ?>
-          <div class="button-height margin-bottom columns status-history-block">
+          <div class="button-height margin-bottom columns status-history-block" id="shb_<?php echo $tStatusHistory['ticket_status_history_id']; ?>">
             <div class="four-columns twelve-columns-mobile new-row-mobile status-history-block-info">
               <p>
                 <?php echo $lC_Language->get('text_last_reply_by'); ?>: <strong>(<?php echo $tStatusHistory['ticket_edited_by']; ?>)</strong><br />
@@ -53,7 +53,7 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
               <div class="status-history-delete-box">
                 <br />
                 <div class="status-history-delete">
-                  <a class="button compact red-gradient" href="javascript:void(0);">
+                  <a class="button compact red-gradient cursor-pointer dshTrigger confirm" href="javascript:deleteStatusHistoryBlock(<?php echo $tStatusHistory['ticket_status_history_id']; ?>);">
                     <?php echo $lC_Language->get('button_delete'); ?>
                   </a>
                 </div>
@@ -75,15 +75,15 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
                   </div>
                   <div class="twelve-columns small-margin-bottom">
                     <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_priority'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketPriorityDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                    <?php echo lC_Support_tickets_Admin::drawTicketPriorityDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
                   </div>
                   <div class="twelve-columns small-margin-bottom">
                     <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_department'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketDepartmentDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                    <?php echo lC_Support_tickets_Admin::drawTicketDepartmentDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
                   </div>
                   <div class="twelve-columns small-margin-bottom">
                     <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_response'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketResponseDropdown($tInfo[2]['ticket_id'], 'anthracite-gradient'); ?>
+                    <?php echo lC_Support_tickets_Admin::drawTicketResponseDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
                   </div>
                 </div>
               </div>            
@@ -92,7 +92,10 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
         </fieldset>
       </div> 
     </div>
-    <?php echo lc_draw_hidden_field('subaction', 'confirm'); ?>
+    <?php 
+      echo lc_draw_hidden_field('subaction', 'confirm'); 
+      $tshID = null;
+    ?>
     <div class="clear-both"></div>
     <div class="six-columns twelve-columns-tablet">
       <div id="buttons-menu-div-listing">
