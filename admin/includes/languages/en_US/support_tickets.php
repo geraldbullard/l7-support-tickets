@@ -9,6 +9,8 @@
 heading_title = Support Tickets
 heading_title_new_ticket = New Support Ticket
 
+button_new_ticket = New Ticket
+
 legend_ticket_details = Ticket Details
 
 table_heading_ticket = Ticket

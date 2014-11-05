@@ -48,7 +48,7 @@ $(document).ready(function() {
   } 
   
   if (quickAdd) {
-    //newTicket();
+    newTicket();
   }
   
   <?php
@@ -119,5 +119,9 @@ function toggleEditor(id) {
 function updateReply(text) {
   var oEditor = CKEDITOR.instances.ckEditorTicketReply;
   oEditor.insertHtml(text);
+}
+
+function newTicket() {
+  $.modal.alert('New Ticket');
 }
 </script>

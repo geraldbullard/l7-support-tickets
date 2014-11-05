@@ -61,6 +61,21 @@
     </div>
     </form>
     <div class="clear-both"></div>
+    <div class="six-columns twelve-columns-tablet">
+      <div id="buttons-menu-div-listing">
+        <div id="buttons-container" style="position: relative;" class="clear-both">
+          <div style="float:right;">
+            <p class="button-height" align="right">
+              <a class="button<?php echo (((int)$_SESSION['admin']['access'][$lC_Template->getModule()] < 2) ? ' disabled' : NULL); ?>" href="<?php echo (((int)$_SESSION['admin']['access'][$lC_Template->getModule()] < 2) ? '#' : 'javascript:newTicket();'); ?>">
+                <span class="button-icon green-gradient">
+                  <span class="icon-plus"></span>
+                </span><?php echo $lC_Language->get('button_new_ticket'); ?>
+              </a>&nbsp;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <?php
     } else {
