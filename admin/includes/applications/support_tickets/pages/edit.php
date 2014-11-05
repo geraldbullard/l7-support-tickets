@@ -37,15 +37,16 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
             foreach ($tInfo as $tStatusHistory) {
           ?>
           <div class="button-height margin-bottom columns status-history-block" id="shb_<?php echo $tStatusHistory['ticket_status_history_id']; ?>">
-            <div class="four-columns twelve-columns-mobile new-row-mobile status-history-block-info">
+            <div class="five-columns twelve-columns-mobile new-row-mobile status-history-block-info">
               <p>
                 <?php echo $lC_Language->get('text_last_reply_by'); ?>: <strong>(<?php echo $tStatusHistory['ticket_edited_by']; ?>)</strong><br />
                 <?php echo $lC_Language->get('text_date'); ?>: <strong><?php echo substr(lC_DateTime::getLong($tStatusHistory['ticket_date_modified']), 0, -6) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr($tStatusHistory['ticket_date_modified'], -8)))); ?></strong><br />
-                <?php echo $lC_Language->get('text_priority'); ?>: <strong><?php echo lC_Support_tickets_Admin::getPriorityTitle($tStatusHistory['ticket_priority_id']); ?></strong><br class="small-margin-bottom" />
+                <?php echo $lC_Language->get('text_priority'); ?>: <strong><?php echo lC_Support_tickets_Admin::getPriorityTitle($tStatusHistory['ticket_priority_id']); ?></strong><br />
+                <?php echo $lC_Language->get('text_department'); ?>: <strong><?php echo lC_Support_tickets_Admin::getDepartmentTitle($tStatusHistory['ticket_department_id']); ?></strong><br class="small-margin-bottom" />
                 <?php echo $lC_Language->get('text_status'); ?>: <strong><span class="tag <?php echo lC_Support_tickets_Admin::getStatusColor($tStatusHistory['ticket_status_id']); ?>-bg no-wrap with-small-padding"><?php echo lC_Support_tickets_Admin::getStatusTitle($tStatusHistory['ticket_status_id']); ?></strong>
               </p>
             </div>
-            <div class="eight-columns twelve-columns-mobile new-row-mobile status-history-block-comment">
+            <div class="seven-columns twelve-columns-mobile new-row-mobile status-history-block-comment">
               <p>
                 <?php echo $tStatusHistory['ticket_comments']; ?>
               </p>
@@ -53,7 +54,7 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
               <div class="status-history-delete-box">
                 <br />
                 <div class="status-history-delete">
-                  <a class="button compact red-gradient cursor-pointer dshTrigger confirm" href="javascript:deleteStatusHistoryBlock(<?php echo $tStatusHistory['ticket_status_history_id']; ?>);">
+                  <a class="button compact red-gradient cursor-pointer confirm" href="javascript:deleteStatusHistoryBlock(<?php echo $tStatusHistory['ticket_status_history_id']; ?>);">
                     <?php echo $lC_Language->get('button_delete'); ?>
                   </a>
                 </div>
@@ -64,53 +65,59 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
           <?php 
               $tshID++;
             }
+            $tshID = $tshID-1;
           ?>
           <div class="field-drop button-height black-inputs">
-            <div class="columns no-margin-bottom">
-              <div class="five-columns twelve-columns-mobile new-row-mobile align-right" style="margin-left:-200px;">
+            <div class="columns no-margin-bottom ticket-reply-selections">
+              <div class="five-columns twelve-columns-mobile new-row-mobile align-right">
                 <div class="columns">
                   <div class="twelve-columns small-margin-bottom">
-                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_status'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketStatusDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_status'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketStatusDropdown($tInfo[$tshID]['ticket_status_id'], 'anthracite-gradient'); ?>
                   </div>
                   <div class="twelve-columns small-margin-bottom">
-                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_priority'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketPriorityDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_priority'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketPriorityDropdown($tInfo[$tshID]['ticket_priority_id'], 'anthracite-gradient'); ?>
                   </div>
                   <div class="twelve-columns small-margin-bottom">
-                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_department'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketDepartmentDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_department'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketDepartmentDropdown($tInfo[$tshID]['ticket_department_id'], 'anthracite-gradient'); ?>
                   </div>
                   <div class="twelve-columns small-margin-bottom">
-                    <font class="white font-eightteen mid-margin-right"><?php echo $lC_Language->get('text_response'); ?></font>
-                    <?php echo lC_Support_tickets_Admin::drawTicketResponseDropdown($tInfo[$tshID]['ticket_id'], 'anthracite-gradient'); ?>
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_response'); ?></font>
+                    <?php echo lC_Support_tickets_Admin::drawTicketResponseDropdown($tInfo[$tshID]['ticket_response_id'], 'anthracite-gradient'); ?>
+                  </div>
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_send_email'); ?></font>
+                    <input name="send_email" type="checkbox" class="switch" checked data-text-on="<?php echo $lC_Language->get('text_yes'); ?>" data-text-off="<?php echo $lC_Language->get('text_no'); ?>">
                   </div>
                 </div>
+              </div>
+              <div class="seven-columns twelve-columns-mobile new-row-mobile small-margin-top no-margin-bottom">
+                <p class="button-height block-label">
+                  <?php echo lc_draw_textarea_field('ckEditorTicketReply', null, null, 10, 'id="ckEditorTicketReply" style="width:97%;" class="input full-width autoexpanding"'); ?>
+                </p>
+                <?php if (ENABLE_EDITOR == '1') { ?>
+                <p class="toggle-html-editor">
+                  <a class="white" href="javascript:toggleEditor();"><?php echo $lC_Language->get('text_toggle_html_editor'); ?></a>
+                </p>
+                <?php } ?>
               </div>            
             </div>
           </div>
         </fieldset>
+        <p class="button-height align-right">
+          <?php 
+            $save = (((int)$_SESSION['admin']['access'][$lC_Template->getModule()] < 2) ? '' : ' onclick="validateForm(\'#ticket\');"');
+            $close = lc_href_link_admin(FILENAME_DEFAULT, $lC_Template->getModule());
+            button_save_close($save, true, $close);
+          ?>
+        </p>
       </div> 
     </div>
     <?php 
       echo lc_draw_hidden_field('subaction', 'confirm'); 
       $tshID = null;
     ?>
-    <div class="clear-both"></div>
-    <div class="six-columns twelve-columns-tablet">
-      <div id="buttons-menu-div-listing">
-        <div id="buttons-container" style="position: relative;" class="clear-both">
-          <div class="align-right">
-            <p class="button-height">
-              <?php 
-                $save = (((int)$_SESSION['admin']['access'][$lC_Template->getModule()] < 2) ? '' : ' onclick="validateForm(\'#ticket\');"');
-                $close = lc_href_link_admin(FILENAME_DEFAULT, $lC_Template->getModule());
-                button_save_close($save, true, $close);
-              ?>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
   </form>
 </section>

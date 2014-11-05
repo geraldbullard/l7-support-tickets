@@ -30,3 +30,6 @@ text_comment_id = Comment ID
 text_status = Status
 text_department = Department
 text_response = Response
+text_toggle_html_editor = Toggle HTML Editor
+text_select_response = Select Response
+text_send_email = Send Email

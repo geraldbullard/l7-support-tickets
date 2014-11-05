@@ -112,6 +112,7 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_priority (ticket_priority_id INT(11) NOT NULL DEFAULT '1',
                                                                                                   ticket_language_id INT(11) NOT NULL DEFAULT '1',
                                                                                                   ticket_priority_name VARCHAR(60) NOT NULL DEFAULT '',
+                                                                                                  ticket_priority_color VARCHAR(60) NOT NULL DEFAULT '',
                                                                                                   PRIMARY KEY (ticket_priority_id, ticket_language_id)
                                                                                                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     $lC_Database->simpleQuery("CREATE TABLE IF NOT EXISTS " . DB_TABLE_PREFIX . "ticket_response (ticket_response_id INT(11) NOT NULL DEFAULT '1',
@@ -143,16 +144,15 @@ class Support_Tickets extends lC_Addon { // your addon must extend lC_Addon
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_department VALUES (1, 1, 'Sales');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_department VALUES (2, 1, 'Marketing');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_department VALUES (3, 1, 'Support');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (1, 1, 'Low');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (2, 1, 'Medium');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (3, 1, 'High');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (4, 1, 'Urgent');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (5, 1, 'Emergency');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (1, 1, 'Low', 'white');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (2, 1, 'Medium', 'silver');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (3, 1, 'High', 'grey');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (4, 1, 'Urgent', 'anthracite');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_priority VALUES (5, 1, 'Emergency', 'black');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (1, 1, 'Open', 'green');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (2, 1, 'On Hold', 'red');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed', 'anthracite');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Admin Reply', 'orange');");
-    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (5, 1, 'Awaiting Customer Reply', 'blue');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (3, 1, 'Closed', 'blue');");
+    $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_status VALUES (4, 1, 'Awaiting Reply', 'orange');");
     $lC_Database->simpleQuery("INSERT INTO " . DB_TABLE_PREFIX . "ticket_response VALUES (1, 1, 'Support Request Received', 'We have received your request for support and will reply as soon as we have more information about your issue. Thank you for using our Support Ticket System!');");
     
     // Enter Configuration Group and Values

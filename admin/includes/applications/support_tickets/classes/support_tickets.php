@@ -44,7 +44,7 @@ class lC_Support_tickets_Admin {
                  </td>';
       $customer = '<td><a class="strong" href="' . lc_href_link_admin(FILENAME_DEFAULT, 'customers&cID=' . $Qtickets->valueInt('customers_id')) . '" title="' . $lC_Language->get('text_view_customer_listing') . '" target="_blank"><span class="icon-user small-margin-right"></span> ' . $Qtickets->value('customers_name') . '</a></td>';
       $status = '<td><span class="tag ' . self::getStatusColor($Qlatestcomments->valueInt('ticket_status_id')) . '-bg no-wrap with-small-padding">' . ucfirst(self::getStatusTitle($Qlatestcomments->valueInt('ticket_status_id'))) . '</span></td>';
-      $priority = '<td>' . self::getPriorityTitle($Qlatestcomments->valueInt('ticket_priority_id')) . '</td>';
+      $priority = '<td><span class="tag ' . self::getPriorityColor($Qlatestcomments->valueInt('ticket_priority_id')) . '-bg no-wrap with-small-padding">' . self::getPriorityTitle($Qlatestcomments->valueInt('ticket_priority_id')) . '</span></td>';
       $date = '<td>' . substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), -5)))) . '</td>';
       $modified = '<td>' . substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), -5)))) . '</td>';
       $action = '<td class="align-right vertical-center">
@@ -96,93 +96,76 @@ class lC_Support_tickets_Admin {
   */
   public static function save($id = null, $data = null, $send_email = true) { 
     global $lC_Database, $lC_Language, $lC_DateTime;
-
-    $lC_Language->loadIniFile('support_tickets.php'); 
-
+    
+    $lC_Language->loadIniFile('support_tickets.php');
+    
     $error = false;
-    $result = array();
+    $lC_Database->startTransaction();
 
-    if (is_numeric($id)) {
+    if (!empty($id) && is_numeric($id)) {
+      $Qticket = $lC_Database->query('update :table_tickets set status_id = :status_id, department_id = :department_id, priority_id = :priority_id, last_modified = :last_modified where ticket_id = :ticket_id');
+      $Qticket->bindInt(':ticket_id', $id);
     } else {
+      //$Qticket = $lC_Database->query('insert into :table_tickets (, , , , , , , , , ) values (:, :, :, :, :, :, :, :, :, :);');
+      //$Qticket->bindRaw(':', 'now()');
     }
 
-    if ($error === false) {
-      /*$lC_Database->startTransaction();
+    $Qticket->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
+    $Qticket->bindInt(':status_id', $data['ticket_status']);
+    $Qticket->bindInt(':department_id', $data['ticket_department']);
+    $Qticket->bindInt(':priority_id', $data['ticket_priority']);
+    $Qticket->bindRaw(':last_modified', 'now()');
+    $Qticket->setLogging($_SESSION['module'], $id);
+    $Qticket->execute();
+    
+    $tid = (!empty($id) && is_numeric($id)) ? $id : $lC_Database->nextID();      
 
-      if (is_numeric($id)) {
-        $Qcustomer = $lC_Database->query('update :table_customers set customers_group_id = :customers_group_id, customers_gender = :customers_gender, customers_firstname = :customers_firstname, customers_lastname = :customers_lastname, customers_email_address = :customers_email_address, customers_dob = :customers_dob, customers_newsletter = :customers_newsletter, customers_status = :customers_status, date_account_last_modified = :date_account_last_modified where customers_id = :customers_id');
-        $Qcustomer->bindRaw(':date_account_last_modified', 'now()');
-        $Qcustomer->bindInt(':customers_id', $id);
-      } else {
-        $Qcustomer = $lC_Database->query('insert into :table_customers (customers_group_id, customers_gender, customers_firstname, customers_lastname, customers_email_address, customers_dob, customers_newsletter, customers_status, number_of_logons, date_account_created) values (:customers_group_id, :customers_gender, :customers_firstname, :customers_lastname, :customers_email_address, :customers_dob, :customers_newsletter, :customers_status, :number_of_logons, :date_account_created)');
-        $Qcustomer->bindInt(':number_of_logons', 0);
-        $Qcustomer->bindRaw(':date_account_created', 'now()');
+    if ($lC_Database->isError()) {
+      $error = true;
+    } else {      
+      $Qhistory = $lC_Database->query('insert into :table_ticket_status_history (ticket_id, ticket_status_id, ticket_priority_id, ticket_department_id, ticket_date_modified, ticket_customer_notified, ticket_comments, ticket_edited_by) values (:ticket_id, :ticket_status_id, :ticket_priority_id, :ticket_department_id, :ticket_date_modified, :ticket_customer_notified, :ticket_comments, :ticket_edited_by);');
+      $Qhistory->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . "ticket_status_history");
+      $Qhistory->bindInt(':ticket_id', $tid);
+      $Qhistory->bindInt(':ticket_status_id', $data['ticket_status']);
+      $Qhistory->bindInt(':ticket_priority_id', $data['ticket_priority']);
+      $Qhistory->bindInt(':ticket_department_id', $data['ticket_department']);
+      $Qhistory->bindRaw(':ticket_date_modified', 'now()');
+      $Qhistory->bindInt(':ticket_customer_notified', ($send_email === true) ? 1 : -1);
+      $Qhistory->bindValue(':ticket_comments', $data['ckEditorTicketReply']);
+      $Qhistory->bindValue(':ticket_edited_by', 'gerald.bullard@gmail.com');
+      $Qhistory->setLogging($_SESSION['module'], $tid);
+      $Qhistory->execute();
+
+      if ($lC_Database->isError()) {
+        $error = true;
       }
-
-      $dob = (isset($data['dob']) && !empty($data['dob'])) ? lC_DateTime::toDateTime($data['dob']) : '0000-00-00 00:00:00';
-
-      $Qcustomer->bindTable(':table_customers', TABLE_CUSTOMERS);
-      $Qcustomer->bindValue(':customers_gender', $data['gender']);
-      $Qcustomer->bindValue(':customers_firstname', $data['firstname']);
-      $Qcustomer->bindValue(':customers_lastname', $data['lastname']);
-      $Qcustomer->bindValue(':customers_email_address', $data['email_address']);
-      $Qcustomer->bindValue(':customers_dob', $dob);
-      $Qcustomer->bindInt(':customers_newsletter', $data['newsletter']);
-      $Qcustomer->bindInt(':customers_status', $data['status']);
-      $Qcustomer->bindInt(':customers_group_id', $data['group']);
-      $Qcustomer->setLogging($_SESSION['module'], $id);
-      $Qcustomer->execute();      
-
-      if (!$lC_Database->isError()) {
-        if ( !empty($data['password']) ) {
-          $customer_id = ( !empty($id) ) ? $id : $lC_Database->nextID();
-          $result['new_customer_id'] = $customer_id;
-
-          $Qpassword = $lC_Database->query('update :table_customers set customers_password = :customers_password where customers_id = :customers_id');
-          $Qpassword->bindTable(':table_customers', TABLE_CUSTOMERS);
-          $Qpassword->bindValue(':customers_password', lc_encrypt_string(trim($data['password'])));
-          $Qpassword->bindInt(':customers_id', $customer_id);
-          $Qpassword->setLogging($_SESSION['module'], $customer_id);
-          $Qpassword->execute();
-
-          if ( $lC_Database->isError() ) {
-            $error = true;
-            $result['rpcStatus'] = -1;
-          } 
-        }
-      }*/
     }
     
-    if ( $error === false ) {
-      /*$lC_Database->commitTransaction();
+    if ($error === false) {
+      //$lC_Database->commitTransaction();
 
-      if ( $send_email === true ) {
-        if ( empty($id) ) {
-          $full_name = trim($data['firstname'] . ' ' . $data['lastname']);
-          $email_text = '';
-          if ( ACCOUNT_GENDER > -1 ) {
-            if ( $data['gender'] == 'm' ) {
-              $email_text .= sprintf($lC_Language->get('email_greet_mr'), trim($data['lastname'])) . "\n\n";
-            } else {
-              $email_text .= sprintf($lC_Language->get('email_greet_ms'), trim($data['lastname'])) . "\n\n";
-            }
+      /*if ($send_email === true) {
+        $full_name = trim($data['firstname'] . ' ' . $data['lastname']);
+        $email_text = '';
+        if ( ACCOUNT_GENDER > -1 ) {
+          if ( $data['gender'] == 'm' ) {
+            $email_text .= sprintf($lC_Language->get('email_greet_mr'), trim($data['lastname'])) . "\n\n";
           } else {
-            $email_text .= sprintf($lC_Language->get('email_greet_general'), $full_name) . "\n\n";
+            $email_text .= sprintf($lC_Language->get('email_greet_ms'), trim($data['lastname'])) . "\n\n";
           }
-          $email_text .= sprintf($lC_Language->get('email_text'), STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, trim($data['password']));
-          $email_subject = sprintf($lC_Language->get('email_subject'), STORE_NAME);
-          lc_email($full_name, $data['email_address'], $email_subject, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        } else {
+          $email_text .= sprintf($lC_Language->get('email_greet_general'), $full_name) . "\n\n";
         }
+        $email_text .= sprintf($lC_Language->get('email_text'), STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, trim($data['password']));
+        $email_subject = sprintf($lC_Language->get('email_subject'), STORE_NAME);
+        lc_email($full_name, $data['email_address'], $email_subject, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }*/
-      
-      $result = 1;
 
-      return $result;
+      return $tid;
+    } else {
+      //$lC_Database->rollbackTransaction();
+      return false;
     }
-
-    $lC_Database->rollbackTransaction();
-
-    return $result;
   }
  /*
   * Return the ticket status dropdown
@@ -190,21 +173,27 @@ class lC_Support_tickets_Admin {
   * @access public
   * @return array
   */ 
-  public static function drawTicketStatusDropdown($tid, $classes = null) {
-    $data = self::get($tid);
+  public static function drawTicketStatusDropdown($tid, $classes = null) { 
+    global $lC_Database, $lC_Language;
+
+    $Qstatus = $lC_Database->query('select ticket_status_id, ticket_status_name from :table_ticket_status where ticket_language_id = :ticket_language_id order by ticket_status_id asc');
+    $Qstatus->bindTable(':table_ticket_status', DB_TABLE_PREFIX . 'ticket_status');
+    $Qstatus->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qstatus->execute();
     
-    $tsDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
-    $tsDropdown .= '<option value="-1">Select Status</option>';
-    $tsDropdown .= '<option value="1">Select Status</option>';
-    $tsDropdown .= '<option value="2">Select Status</option>';
-    $tsDropdown .= '<option value="3">Select Status</option>';
-    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+    $Qstatusarray = array();
+    while ($Qstatus->next()) {
+      $Qstatusarray[$Qstatus->valueInt('ticket_status_id')] = $Qstatus->value('ticket_status_name');
+    }
+    
+    $tsDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_status" name="ticket_status">';
+    foreach ($Qstatusarray as $id => $val) {
       $tsDropdown .= '<option value="' . $id . '"';
-      if ($data['ticketStatusID'] == $id) {
+      if ($tid == $id) {
         $tsDropdown .= ' selected="selected"';
       }
       $tsDropdown .= '>' . $val . '</option>';
-    }*/
+    }
     $tsDropdown .= '</select>';
     
     return $tsDropdown;
@@ -215,21 +204,27 @@ class lC_Support_tickets_Admin {
   * @access public
   * @return array
   */ 
-  public static function drawTicketPriorityDropdown($tid, $classes = null) {
-    $data = self::get($tid);
+  public static function drawTicketPriorityDropdown($pid, $classes = null) { 
+    global $lC_Database, $lC_Language;
+
+    $Qpriority = $lC_Database->query('select ticket_priority_id, ticket_priority_name from :table_ticket_priority where ticket_language_id = :ticket_language_id order by ticket_priority_id asc');
+    $Qpriority->bindTable(':table_ticket_priority', DB_TABLE_PREFIX . 'ticket_priority');
+    $Qpriority->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qpriority->execute();
     
-    $tpDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
-    $tpDropdown .= '<option value="-1">Select Priority</option>';
-    $tpDropdown .= '<option value="1">Select Priority</option>';
-    $tpDropdown .= '<option value="2">Select Priority</option>';
-    $tpDropdown .= '<option value="3">Select Priority</option>';
-    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+    $Qpriorityarray = array();
+    while ($Qpriority->next()) {
+      $Qpriorityarray[$Qpriority->valueInt('ticket_priority_id')] = $Qpriority->value('ticket_priority_name');
+    }
+
+    $tpDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_priority" name="ticket_priority">';
+    foreach ($Qpriorityarray as $id => $val) {
       $tpDropdown .= '<option value="' . $id . '"';
-      if ($data['ticketStatusID'] == $id) {
+      if ($pid == $id) {
         $tpDropdown .= ' selected="selected"';
       }
       $tpDropdown .= '>' . $val . '</option>';
-    }*/
+    }
     $tpDropdown .= '</select>';
     
     return $tpDropdown;
@@ -240,21 +235,27 @@ class lC_Support_tickets_Admin {
   * @access public
   * @return array
   */ 
-  public static function drawTicketDepartmentDropdown($tid, $classes = null) {
-    $data = self::get($tid);
+  public static function drawTicketDepartmentDropdown($did, $classes = null) { 
+    global $lC_Database, $lC_Language;
+
+    $Qdepartment = $lC_Database->query('select ticket_department_id, ticket_department_name from :table_ticket_department where ticket_language_id = :ticket_language_id order by ticket_department_id asc');
+    $Qdepartment->bindTable(':table_ticket_department', DB_TABLE_PREFIX . 'ticket_department');
+    $Qdepartment->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qdepartment->execute();
     
-    $tdDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
-    $tdDropdown .= '<option value="-1">Select Department</option>';
-    $tdDropdown .= '<option value="1">Select Department</option>';
-    $tdDropdown .= '<option value="2">Select Department</option>';
-    $tdDropdown .= '<option value="3">Select Department</option>';
-    /*foreach ($data['ticketStatusArray'] as $id => $val) {
+    $Qdepartmentarray = array();
+    while ($Qdepartment->next()) {
+      $Qdepartmentarray[$Qdepartment->valueInt('ticket_department_id')] = $Qdepartment->value('ticket_department_name');
+    }
+    
+    $tdDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_department" name="ticket_department">';
+    foreach ($Qdepartmentarray as $id => $val) {
       $tdDropdown .= '<option value="' . $id . '"';
-      if ($data['ticketStatusID'] == $id) {
+      if ($did == $id) {
         $tdDropdown .= ' selected="selected"';
       }
       $tdDropdown .= '>' . $val . '</option>';
-    }*/
+    }
     $tdDropdown .= '</select>';
     
     return $tdDropdown;
@@ -265,21 +266,24 @@ class lC_Support_tickets_Admin {
   * @access public
   * @return array
   */ 
-  public static function drawTicketResponseDropdown($tid, $classes = null) {
-    $data = self::get($tid);
+  public static function drawTicketResponseDropdown($rid, $classes = null) { 
+    global $lC_Database, $lC_Language;
+
+    $Qresponse = $lC_Database->query('select ticket_response_text, ticket_response_name from :table_ticket_response where ticket_language_id = :ticket_language_id order by ticket_response_id asc');
+    $Qresponse->bindTable(':table_ticket_response', DB_TABLE_PREFIX . 'ticket_response');
+    $Qresponse->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qresponse->execute();
     
-    $trDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_statuses" name="ticket_statuses">';
-    $trDropdown .= '<option value="-1">Select Response</option>';
-    $trDropdown .= '<option value="1">Select Response</option>';
-    $trDropdown .= '<option value="2">Select Response</option>';
-    $trDropdown .= '<option value="3">Select Response</option>';
-    /*foreach ($data['ticketStatusArray'] as $id => $val) {
-      $trDropdown .= '<option value="' . $id . '"';
-      if ($data['ticketStatusID'] == $id) {
-        $trDropdown .= ' selected="selected"';
-      }
-      $trDropdown .= '>' . $val . '</option>';
-    }*/
+    $Qresponsearray = array();
+    while ($Qresponse->next()) {
+      $Qresponsearray[$Qresponse->value('ticket_response_text')] = $Qresponse->value('ticket_response_name');
+    }
+    
+    $trDropdown = '<select onchange="updateReply(this.value + \' \');" class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_response" name="ticket_response">';
+    $trDropdown .= '<option value="">' . $lC_Language->get('text_select_response') . '</option>';
+    foreach ($Qresponsearray as $id => $val) {
+      $trDropdown .= '<option value="' . $id . '">' . $val . '</option>';
+    }
     $trDropdown .= '</select>';
     
     return $trDropdown;
@@ -351,6 +355,40 @@ class lC_Support_tickets_Admin {
     $Qprioritytitle->execute();
     
     return $Qprioritytitle->value('ticket_priority_name');
+  }
+ /*
+  * Returns the ticket priority color
+  *
+  * @access public
+  * @return string
+  */
+  public static function getPriorityColor($pid = null) {
+    global $lC_Database, $lC_Language;
+
+    $Qprioritycolor = $lC_Database->query("SELECT ticket_priority_color FROM :table_ticket_priority WHERE ticket_priority_id = :ticket_priority_id AND ticket_language_id = :ticket_language_id LIMIT 1");
+    $Qprioritycolor->bindTable(':table_ticket_priority', DB_TABLE_PREFIX . 'ticket_priority');
+    $Qprioritycolor->bindInt(':ticket_priority_id', $pid);
+    $Qprioritycolor->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qprioritycolor->execute();
+    
+    return $Qprioritycolor->value('ticket_priority_color');
+  }
+ /*
+  * Returns the ticket department title
+  *
+  * @access public
+  * @return string
+  */
+  public static function getDepartmentTitle($did = null) {
+    global $lC_Database, $lC_Language;
+
+    $Qdepartmenttitle = $lC_Database->query("SELECT ticket_department_name FROM :table_ticket_department WHERE ticket_department_id = :ticket_department_id AND ticket_language_id = :ticket_language_id LIMIT 1");
+    $Qdepartmenttitle->bindTable(':table_ticket_department', DB_TABLE_PREFIX . 'ticket_department');
+    $Qdepartmenttitle->bindInt(':ticket_department_id', $did);
+    $Qdepartmenttitle->bindInt(':ticket_language_id', $lC_Language->getID());
+    $Qdepartmenttitle->execute();
+    
+    return $Qdepartmenttitle->value('ticket_department_name');
   }
  /*
   * Returns the ticket priority title

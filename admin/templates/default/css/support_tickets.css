@@ -25,6 +25,14 @@
   right: 0;
 }
 
+.field-drop:after {
+  display: none;
+}
+
+.ticket-reply-selections {
+  margin-left: -250px;
+}
+
 /* custom media queries */
 @media screen and (min-width: 480px) and (max-width: 767px) {
 }

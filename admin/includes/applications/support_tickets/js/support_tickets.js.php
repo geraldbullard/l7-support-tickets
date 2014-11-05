@@ -8,7 +8,7 @@
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
   @version    $Id: support_tickets.js.php v1.0 2013-08-08 maestro $
 */
-global $lC_Template, $lC_Language;
+global $lC_Template, $lC_Language, $tInfo;
 ?>      
 <script>
 $(document).ready(function() {
@@ -49,7 +49,21 @@ $(document).ready(function() {
   
   if (quickAdd) {
     //newTicket();
-  }   
+  }
+  
+  <?php
+    if (isset($tInfo)) {
+      if (ENABLE_EDITOR == 1) { 
+        if (USE_DEFAULT_TEMPLATE_STYLESHEET == 1) { 
+          echo "CKEDITOR.replace('ckEditorTicketReply', {toolbar: 'Minimum', height: 200, width: '99%', contentsCss: '../templates/" . DEFAULT_TEMPLATE . "/css/styles.css', stylesSet: [] });";
+        } else {
+          echo "CKEDITOR.replace('ckEditorTicketReply', {toolbar: 'Minimum', height: 200, width: '99%' });";
+        }
+      } else {
+        echo '$("#ckEditorTicketReply").css("height", "200px").css("width", "99.8%");';
+      }
+    }
+  ?>   
 });
   
 function validateForm(e) {
@@ -90,5 +104,20 @@ function deleteStatusHistoryBlock(shid) {
       }
     }
   );
+}
+
+function toggleEditor(id) {
+  if ($("#ckEditorTicketReply").is(":visible")) {
+    $("#ckEditorTicketReply").hide();
+    $("#cke_ckEditorTicketReply").show();
+  } else {
+    $("#ckEditorTicketReply").attr("style", "width:99%").attr("style", "height:200px!important");
+    $("#cke_ckEditorTicketReply").hide();
+  }
+}
+
+function updateReply(text) {
+  var oEditor = CKEDITOR.instances.ckEditorTicketReply;
+  oEditor.insertHtml(text);
 }
 </script>
