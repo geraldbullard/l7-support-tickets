@@ -25,18 +25,6 @@ class lC_Support_tickets_Admin_rpc {
     echo json_encode($result);
   }
  /*
-  * Returns the open ticket count
-  *
-  * @access public
-  * @return json
-  */
-  public static function openTicketCount() {
-    $result = lC_Support_tickets_Admin::openTicketCount();
-    $result['rpcStatus'] = RPC_STATUS_SUCCESS;
-    
-    echo json_encode($result);
-  }
- /*
   * Deletes the status history row matching the shid from the $_GET
   *
   * @access public
@@ -60,6 +48,36 @@ class lC_Support_tickets_Admin_rpc {
     $result = array();
     if ($result = lC_Support_tickets_Admin::cSearch($_GET['q'])) {
       $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+    
+    echo json_encode($result);
+  }
+ /*
+  * Returns the ticket form data
+  *
+  * @param string $_GET['tid'] The ticket id
+  * @access public
+  * @return json
+  */
+  public static function getFormData() {
+    $result = array();
+    if ($result = lC_Support_tickets_Admin::get($_GET['tid'])) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+    
+    echo json_encode($result);
+  }
+ /*
+  * Deletes the ticket data
+  *
+  * @param string $_GET['tid'] The ticket id
+  * @access public
+  * @return json
+  */
+  public static function deleteTicket() {
+    $result = array();
+    if (lC_Support_tickets_Admin::delete($_GET['tid']) == true) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;    
     }
     
     echo json_encode($result);

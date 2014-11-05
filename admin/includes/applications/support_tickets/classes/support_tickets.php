@@ -52,7 +52,7 @@ class lC_Support_tickets_Admin {
                      <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? '#' : lc_href_link_admin(FILENAME_DEFAULT, $_module . '=' . $Qtickets->valueInt('ticket_id') . '&action=save')) . '" class="button icon-pencil ' . ((int)($_SESSION['admin']['access'][$_module] < 3) ? 'disabled' : NULL) . '">' . (($media === 'mobile-portrait' || $media === 'mobile-landscape') ? NULL : $lC_Language->get('icon_edit')) . '</a>
                    </span>
                    <span class="button-group">
-                     <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteEntry(\'' . $Qtickets->valueInt('ticket_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
+                     <a href="' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? '#' : 'javascript://" onclick="deleteTicket(\'' . $Qtickets->valueInt('ticket_id') . '\')') . '" class="button icon-trash with-tooltip' . ((int)($_SESSION['admin']['access'][$_module] < 4) ? 'disabled' : NULL) . '" title="' . $lC_Language->get('icon_delete') . '"></a>
                    </span>
                  </span></td>';
 
@@ -176,6 +176,45 @@ class lC_Support_tickets_Admin {
       return $tid;
     } else {
       //$lC_Database->rollbackTransaction();
+      return false;
+    }
+  }
+ /*
+  * Returns the ticket priority title
+  *
+  * @access public
+  * @return string
+  */
+  public static function delete($tid = null) {
+    global $lC_Database;
+    
+    $error = false;
+    $lC_Database->startTransaction();
+    
+    $Qdelt = $lC_Database->query("DELETE FROM :table_tickets WHERE ticket_id = :ticket_id limit 1");
+    $Qdelt->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
+    $Qdelt->bindInt(':ticket_id', $tid);
+    $Qdelt->setLogging($_SESSION['module'], $tid);
+    $Qdelt->execute(); 
+    
+    if ($lC_Database->isError()) {
+      $error = true;
+    }
+    
+    $Qdeltsh = $lC_Database->query("DELETE FROM :table_ticket_status_history WHERE ticket_id = :ticket_id");
+    $Qdeltsh->bindTable(':table_ticket_status_history', DB_TABLE_PREFIX . 'ticket_status_history');
+    $Qdeltsh->bindInt(':ticket_id', $tid);
+    $Qdeltsh->execute();
+    
+    if ($lC_Database->isError()) {
+      $error = true;
+    }
+    
+    if ($error === false) {
+      $lC_Database->commitTransaction();
+      return true;
+    } else {
+      $lC_Database->rollbackTransaction();
       return false;
     }
   }

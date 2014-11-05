@@ -18,8 +18,11 @@ field_order_id = Related Order
 info_bubble_ticket_customer = Search by Name or Email for the customer you are creating this Support Ticket for.
 info_bubble_ticket_subject = Enter a subject for this Support Ticket.
 info_bubble_ticket_order_id = Select a related Order ID if applicable.<br /><br />You must select a customer to populate this selection.
+introduction_delete_ticket = Are you sure you wish to delete the ticket:
 
 legend_ticket_details = Ticket Details
+
+modal_heading_delete_ticket = Delete Supoort Ticket
 
 table_heading_ticket = Ticket
 table_heading_status = Status
