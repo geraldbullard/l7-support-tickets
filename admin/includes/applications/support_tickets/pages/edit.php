@@ -8,7 +8,7 @@
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
   @version    $Id: edit.php v1.0 2013-08-08 maestro $
 */
-if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
+if (is_numeric($_GET[$lC_Template->getModule()])) {
   $tInfo = lC_Support_tickets_Admin::get($_GET[$lC_Template->getModule()]);
 }
 ?>
@@ -33,8 +33,12 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
         <fieldset class="fieldset">
           <legend class="legend"><?php echo $lC_Language->get('legend_ticket_details'); ?></legend>
           <?php
-            $tshID = 0;
-            foreach ($tInfo as $tStatusHistory) {
+            if (isset($tInfo) && $tInfo != '') {
+          ?>
+          <input id="ticket_customer_id" type="hidden" value="<?php echo $tInfo[0]['customers_id']; ?>" name="ticket_customer_id">
+          <?php
+              $tshID = 0;
+              foreach ($tInfo as $tStatusHistory) {
           ?>
           <div class="button-height margin-bottom columns status-history-block" id="shb_<?php echo $tStatusHistory['ticket_status_history_id']; ?>">
             <div class="five-columns twelve-columns-mobile new-row-mobile status-history-block-info">
@@ -63,9 +67,49 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
             </div>
           </div>
           <?php 
-              $tshID++;
+                $tshID++;
+              }
+              $tshID = $tshID-1;
+            } else {
+          ?>
+          <div class="columns">
+            <div class="six-columns twelve-columns-mobile new-row-mobile">
+              <div class="button-height block-label">
+                <label class="label mid-margin-bottom" for="ticket_customer">
+                  <?php echo $lC_Language->get('field_customer'); ?>
+                  <?php echo lc_show_info_bubble($lC_Language->get('info_bubble_ticket_customer'), null); ?>
+                </label>
+                <span class="input full-width margin-bottom">
+                  <label class="button blue-gradient cursor-default" for="ticket_customer">
+                    <span class="icon-white small-margin-right">
+                      <span class="small-margin-left" id="edit-company_owner_name">
+                        Search
+                      </span>
+                    </span>
+                  </label>
+                  <input id="ticket_customer" class="input-unstyled" type="text" onkeyup="ticketCustomerSearch(this.value);" autocomplete="off" placeholder="<?php echo $lC_Language->get('text_customer_search_placeholder'); ?>" value="" name="ticket_customer">
+                  <input id="ticket_customer_id" type="hidden" value="" name="ticket_customer_id">
+                </span>
+                <div id="ticket_customer_results" style="display:none;"></div>
+              </div>
+              <p class="button-height block-label">
+                <label class="label" for="ticket_subject">
+                  <?php echo $lC_Language->get('field_subject'); ?>
+                  <?php echo lc_show_info_bubble($lC_Language->get('info_bubble_ticket_subject'), null); ?>
+                </label>
+                <?php echo lc_draw_input_field('ticket_subject', null, 'class="required input full-width mid-margin-top" id="ticket_subject"'); ?>
+              </p>
+              <p class="button-height block-label disabled">
+                <label class="label" for="ticket_customer">
+                  <?php echo $lC_Language->get('field_order_id'); ?>
+                  <?php echo lc_show_info_bubble($lC_Language->get('info_bubble_ticket_order_id'), null); ?>
+                </label>
+                <?php echo lC_Support_tickets_Admin::drawTicketOrdersDropdown(1, 'anthracite-gradient'); ?>
+              </p>
+            </div>
+          </div>            
+          <?php 
             }
-            $tshID = $tshID-1;
           ?>
           <div class="field-drop button-height black-inputs">
             <div class="columns no-margin-bottom ticket-reply-selections">
@@ -90,6 +134,10 @@ if ( is_numeric($_GET[$lC_Template->getModule()]) ) {
                   <div class="twelve-columns small-margin-bottom">
                     <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_send_email'); ?></font>
                     <input name="send_email" type="checkbox" class="switch" checked data-text-on="<?php echo $lC_Language->get('text_yes'); ?>" data-text-off="<?php echo $lC_Language->get('text_no'); ?>">
+                  </div>
+                  <div class="twelve-columns small-margin-bottom">
+                    <font class="white font-fourteen mid-margin-right"><?php echo $lC_Language->get('text_login_required'); ?></font>
+                    <input name="login_required" type="checkbox" class="switch"<?php echo ($tInfo[0]['login_required'] == '1' ? ' checked' : null); ?> data-text-on="<?php echo $lC_Language->get('text_yes'); ?>" data-text-off="<?php echo $lC_Language->get('text_no'); ?>">
                   </div>
                 </div>
               </div>

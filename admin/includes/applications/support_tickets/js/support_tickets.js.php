@@ -52,7 +52,7 @@ $(document).ready(function() {
   }
   
   <?php
-    if (isset($tInfo)) {
+    if (isset($_GET['action']) && $_GET['action'] != '') {
       if (ENABLE_EDITOR == 1) { 
         if (USE_DEFAULT_TEMPLATE_STYLESHEET == 1) { 
           echo "CKEDITOR.replace('ckEditorTicketReply', {toolbar: 'Minimum', height: 200, width: '99%', contentsCss: '../templates/" . DEFAULT_TEMPLATE . "/css/styles.css', stylesSet: [] });";
@@ -123,5 +123,30 @@ function updateReply(text) {
 
 function newTicket() {
   $.modal.alert('New Ticket');
+}
+
+function ticketCustomerSearch(q) {
+  var jsonLink = '<?php echo lc_href_link_admin('rpc.php', $lC_Template->getModule() . '&action=cSearch&q=SEARCH'); ?>'
+  $.getJSON(jsonLink.replace('SEARCH', q),
+    function (data) {
+      if (data.rpcStatus == -10) { // no session
+        var url = "<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'login'); ?>";
+        $(location).attr('href',url);
+      }
+      if (data.rpcStatus != 1) {
+        $.modal.alert('<?php echo $lC_Language->get('ms_error_action_not_performed'); ?>');
+        return false;
+      } 
+      $('#ticket_customer_results').show().html(data.html);
+      if (!q) $('#ticket_customer_results').hide();
+    }
+  );
+}
+
+function setTicketCustomer(cid, name) {
+  $("#ticket_customer_results").hide();
+  $("#ticket_order_id").closest('p').removeClass('disabled');
+  $("#ticket_customer").val(name);
+  $("#ticket_customer_id").val(cid);
 }
 </script>

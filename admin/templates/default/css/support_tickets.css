@@ -33,6 +33,11 @@
   margin-left: -250px;
 }
 
+#ticket_customer_results {
+  margin-top: -16px;
+  margin-bottom: 16px;
+}
+
 /* custom media queries */
 @media screen and (min-width: 480px) and (max-width: 767px) {
 }

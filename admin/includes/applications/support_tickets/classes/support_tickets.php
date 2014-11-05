@@ -101,13 +101,24 @@ class lC_Support_tickets_Admin {
     
     $error = false;
     $lC_Database->startTransaction();
-
+    
+    $Qcustomer = $lC_Database->query('select customers_firstname, customers_lastname, customers_email_address from :table_customers where customers_id = :customers_id limit 1;');
+    $Qcustomer->bindTable(':table_customers', TABLE_CUSTOMERS);
+    $Qcustomer->bindInt(':customers_id', $data['ticket_customer_id']);
+    $Qcustomer->execute(); 
+    
     if (!empty($id) && is_numeric($id)) {
       $Qticket = $lC_Database->query('update :table_tickets set status_id = :status_id, department_id = :department_id, priority_id = :priority_id, last_modified = :last_modified where ticket_id = :ticket_id');
       $Qticket->bindInt(':ticket_id', $id);
     } else {
-      //$Qticket = $lC_Database->query('insert into :table_tickets (, , , , , , , , , ) values (:, :, :, :, :, :, :, :, :, :);');
-      //$Qticket->bindRaw(':', 'now()');
+      $Qticket = $lC_Database->query('insert into :table_tickets (link_id, customers_id, customers_email, customers_name, orders_id, subject, status_id, department_id, priority_id, date_added, last_modified, login_required) values (:link_id, :customers_id, :customers_email, :customers_name, :orders_id, :subject, :status_id, :department_id, :priority_id, :date_added, :last_modified, :login_required);');
+      $Qticket->bindValue(':link_id', 'dhfnfgsbsh');
+      $Qticket->bindInt(':customers_id', $data['ticket_customer_id']);
+      $Qticket->bindValue(':customers_email', $Qcustomer->value('customers_email_address'));
+      $Qticket->bindValue(':customers_name', $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'));
+      $Qticket->bindRaw(':date_added', 'now()');
+      $Qticket->bindInt(':orders_id', $data['ticket_order_id']);
+      $Qticket->bindValue(':subject', $data['ticket_subject']);
     }
 
     $Qticket->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
@@ -115,6 +126,7 @@ class lC_Support_tickets_Admin {
     $Qticket->bindInt(':department_id', $data['ticket_department']);
     $Qticket->bindInt(':priority_id', $data['ticket_priority']);
     $Qticket->bindRaw(':last_modified', 'now()');
+    $Qticket->bindInt(':login_required', $data['login_required']);
     $Qticket->setLogging($_SESSION['module'], $id);
     $Qticket->execute();
     
@@ -132,7 +144,7 @@ class lC_Support_tickets_Admin {
       $Qhistory->bindRaw(':ticket_date_modified', 'now()');
       $Qhistory->bindInt(':ticket_customer_notified', ($send_email === true) ? 1 : -1);
       $Qhistory->bindValue(':ticket_comments', $data['ckEditorTicketReply']);
-      $Qhistory->bindValue(':ticket_edited_by', 'gerald.bullard@gmail.com');
+      $Qhistory->bindValue(':ticket_edited_by', $Qcustomer->value('customers_email_address'));
       $Qhistory->setLogging($_SESSION['module'], $tid);
       $Qhistory->execute();
 
@@ -289,6 +301,35 @@ class lC_Support_tickets_Admin {
     return $trDropdown;
   }
  /*
+  * Return the customer orders dropdown
+  *
+  * @access public
+  * @return array
+  */ 
+  public static function drawTicketOrdersDropdown($cid, $classes = null) { 
+    global $lC_Database, $lC_Language;
+
+    //$Qorders = $lC_Database->query('select ticket_response_text, ticket_response_name from :table_ticket_response where ticket_language_id = :ticket_language_id order by ticket_response_id asc');
+    //$Qorders->bindTable(':table_ticket_response', DB_TABLE_PREFIX . 'ticket_response');
+    //$Qorders->bindInt(':ticket_language_id', $lC_Language->getID());
+    //$Qorders->execute();
+    
+    //$Qordersarray = array();
+    //while ($Qorders->next()) {
+    //  $Qordersarray[$Qorders->value('')] = $Qorders->value('');
+    //}
+    
+    $coDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_order_id" name="ticket_order_id">';
+    $coDropdown .= '<option value="">' . $lC_Language->get('text_select_order') . '</option>';
+    $coDropdown .= '<option value="1">#1 $13.98 10/22/2014</option>';
+    /*foreach ($Qordersarray as $id => $val) {
+      $coDropdown .= '<option value="' . $id . '">' . $val . '</option>';
+    }*/
+    $coDropdown .= '</select>';
+    
+    return $coDropdown;
+  }
+ /*
   * Returns the number of open tickets
   *
   * @access public
@@ -408,6 +449,72 @@ class lC_Support_tickets_Admin {
       return false;
     } else {
       return true;
+    }
+  } 
+ /*
+  * Returns the customer search results from database
+  *
+  * @param string $_GET['q'] The search string
+  * @access public
+  * @return array
+  */
+  public static function cSearch($search) {
+    global $lC_Database, $lC_Language, $lC_Currencies;
+    
+    if ($search) {
+      // start building the main <ul>
+      $result['html'] = '' . "\n";
+      
+      // return customer data
+      $Qcustomers = array();    
+      $Qcustomers = $lC_Database->query("select customers_id, 
+                                                customers_firstname, 
+                                                customers_lastname, 
+                                                customers_email_address 
+                                           from :table_customers 
+                                          where convert(customers_firstname using utf8) regexp '" . $search . "' 
+                                             or convert(customers_lastname using utf8) regexp '" . $search . "' 
+                                             or convert(customers_email_address using utf8) regexp '" . $search . "' 
+                                             or convert(customers_telephone using utf8) regexp '" . $search . "';");
+                                                                            
+      $Qcustomers->bindTable(':table_customers', TABLE_CUSTOMERS);
+      $Qcustomers->execute();
+      
+      // set the customers data results as an array
+      while($Qcustomers->next()) {
+        $QcustomerResults[] = $Qcustomers->toArray();
+      }   
+       
+      // build the customers results <li> html for output
+      // return <li> only if greater than 0 results from customers query  
+      if ($QcustomerResults > 0) {
+        $result['html'] .= '    <ul class="customers-menu">' . "\n";
+        foreach ($QcustomerResults as $key => $value) { 
+          $result['html'] .= '      <li class="bevel" title="' . $lC_Language->get('customer_view_details') . ' ' . $value['customers_firstname'] . ' '  . $value['customers_lastname'] . '">' . "\n" . 
+                             '        <a href="#" onclick="setTicketCustomer(\'' . $value['customers_id'] . '\', \'' . $value['customers_firstname'] . ' '  . $value['customers_lastname'] . '\');">' . "\n" .
+                             '          <span class="float-right">' . $value['customers_id'] . '</span>' . "\n" . 
+                             '          <time><i class="icon-user icon-size2 icon-grey"></i></time>' . "\n" . 
+                             '          <span class="green"><b>' . $value['customers_firstname'] . ' '  . $value['customers_lastname'] . '</b></span><small>'  . $value['customers_email_address'] . '</small>' . "\n" . 
+                             '        </a>' . "\n" .
+                             '      </li>';
+        }
+        $result['html'] .= '    </ul>' . "\n";
+      } else {
+        $result['html'] .= '    <ul class="customers-menu">' . "\n"; 
+        $result['html'] .= '      <li class="bevel">' . "\n" . 
+                           '        <span class="float-right">&nbsp;</span>' . "\n" . 
+                           '        <time style="margin-left:-47px;"><i class="icon-forbidden icon-size2 icon-grey"></i></time>' . "\n" . 
+                           '        <span class="green" style="margin-left:-20px;"><b>No Results Found</b></span><small style="margin-left:-20px;">Please try another search</small>' . "\n" . 
+                           '      </li>';
+        $result['html'] .= '    </ul>' . "\n";
+      }
+       
+      return $result;
+    } else {
+      // we have nothing being sent from search field 
+      $result['html'] = '' . "\n";
+      
+      return $result;
     }
   } 
 }

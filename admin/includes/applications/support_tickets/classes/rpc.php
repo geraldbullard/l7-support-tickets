@@ -49,5 +49,20 @@ class lC_Support_tickets_Admin_rpc {
     
     echo json_encode($result);
   }
+ /*
+  * Returns the customer search results
+  *
+  * @param string $_GET['q'] The search string
+  * @access public
+  * @return json
+  */
+  public static function cSearch() {
+    $result = array();
+    if ($result = lC_Support_tickets_Admin::cSearch($_GET['q'])) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;
+    }
+    
+    echo json_encode($result);
+  }
 }
 ?>

@@ -20,11 +20,15 @@ class lC_Application_Support_tickets_Actions_save extends lC_Application_Support
     $this->_page_contents = 'edit.php';
 
     if ( isset($_POST['subaction']) && ($_POST['subaction'] == 'confirm') ) {
-      
-      $data = array('ticket_status' => $_POST['ticket_status'],
+      $data = array('ticket_customer' => $_POST['ticket_customer'],
+                    'ticket_customer_id' => $_POST['ticket_customer_id'],
+                    'ticket_subject' => $_POST['ticket_subject'],
+                    'ticket_order_id' => ($_POST['ticket_order_id'] != '') ? $_POST['ticket_order_id'] : -1,
+                    'ticket_status' => $_POST['ticket_status'],
                     'ticket_priority' => $_POST['ticket_priority'],
                     'ticket_department' => $_POST['ticket_department'],
-                    'ckEditorTicketReply' => $_POST['ckEditorTicketReply']);
+                    'ckEditorTicketReply' => $_POST['ckEditorTicketReply'],
+                    'login_required' => ($_POST['login_required'] == 'on' ? 1 : -1));
                     
       $id = lC_Support_tickets_Admin::save((isset($_GET[$this->_module]) && is_numeric($_GET[$this->_module]) ? $_GET[$this->_module] : null), $data, ($_POST['send_email'] == 'on' ? true : false));
       

@@ -11,6 +11,14 @@ heading_title_new_ticket = New Support Ticket
 
 button_new_ticket = New Ticket
 
+field_customer = Customer
+field_subject = Subject
+field_order_id = Related Order
+
+info_bubble_ticket_customer = Search by Name or Email for the customer you are creating this Support Ticket for.
+info_bubble_ticket_subject = Enter a subject for this Support Ticket.
+info_bubble_ticket_order_id = Select a related Order ID if applicable.<br /><br />You must select a customer to populate this selection.
+
 legend_ticket_details = Ticket Details
 
 table_heading_ticket = Ticket
@@ -34,4 +42,9 @@ text_department = Department
 text_response = Response
 text_toggle_html_editor = Toggle HTML Editor
 text_select_response = Select Response
+text_select_order = Select Related Order
 text_send_email = Send Email
+text_login_required = Require Login
+text_customer_search_placeholder = Name or Email
+text_no_results = No Results Found
+text_try_another_search = Please try another search
