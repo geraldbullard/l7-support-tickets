@@ -15,18 +15,6 @@
   <hgroup id="main-title" class="thin">
     <h1><?php echo $lC_Template->getPageTitle(); ?></h1>
   </hgroup>
-  <style>
-  .dataColCheck { text-align: left; }
-  .dataColTicket { text-align: left; }
-  .dataColCustomer { text-align: left; }
-  .dataColStatus { text-align: left; }
-  .dataColPriority { text-align: left; }
-  .dataColDate { text-align: left; }
-  .dataColModified { text-align: left; }
-  .dataColAction { text-align: right; }
-  .dataTables_info { position:absolute; bottom:42px; color:#4c4c4c; }
-  .selectContainer { position:absolute; bottom:29px; left:30px }
-  </style>
   <?php
     if (defined('ADDONS_CATALOG_SUPPORT_TICKETS_STATUS') && @constant('ADDONS_CATALOG_SUPPORT_TICKETS_STATUS') == 1) {
   ?>
