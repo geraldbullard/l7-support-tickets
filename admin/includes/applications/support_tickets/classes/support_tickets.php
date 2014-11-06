@@ -8,6 +8,9 @@
   @license    https://github.com/loadedcommerce/loaded7/blob/master/LICENSE.txt
   @version    $Id: support_tickets.php v1.0 2013-08-08 maestro $
 */
+global $lC_Vqmod;
+require_once($lC_Vqmod->modCheck('includes/applications/orders/classes/orders.php'));
+
 class lC_Support_tickets_Admin {
  /*
   * Returns the support_tickets data
@@ -32,18 +35,32 @@ class lC_Support_tickets_Admin {
       $Qlatestcomments->bindInt(':ticket_id', $Qtickets->valueInt('ticket_id'));
       $Qlatestcomments->execute();
       
+      $oValid = array();
+      $oValid = lC_Orders_Admin::getInfo($Qtickets->valueInt('orders_id'));
+      
       $check = '<td><input class="batch" type="checkbox" name="batch[]" value="' . $Qtickets->valueInt('ticket_id') . '" id="' . $Qtickets->valueInt('ticket_id') . '"></td>';
       $ticket = '<td>
                    <span class="tag grey-bg">' . $Qtickets->valueInt('ticket_id') . '</span> ' . $Qtickets->value('subject') . '
                    <p class="small mid-margin-top">' . 
-                     '<span class="strong">' . $lC_Language->get('text_ticket_latest_comments') . ': <br />' . 
-                     '<span class="anthracite">' . $Qlatestcomments->value('ticket_edited_by') . '<br />' .
+                     '<span class="strong">' . $lC_Language->get('text_ticket_latest_comments') . ': <br class="small-margin-bottom" />' . 
+                     '<span class="anthracite">' . $Qlatestcomments->value('ticket_edited_by') . '<br class="small-margin-bottom" />' .
                      substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), -5)))) . '</span></span>' .
                      '<br class="mid-margin-bottom" /> ' . 
                      $Qlatestcomments->value('ticket_comments') . 
                    '</p>
                  </td>';
-      $customer = '<td><a class="strong" href="' . lc_href_link_admin(FILENAME_DEFAULT, 'customers&cID=' . $Qtickets->valueInt('customers_id')) . '" title="' . $lC_Language->get('text_view_customer_listing') . '" target="_blank"><span class="icon-user small-margin-right"></span> ' . $Qtickets->value('customers_name') . '</a></td>';
+      $customer = '<td>
+                     <a class="strong" href="' . lc_href_link_admin(FILENAME_DEFAULT, 'customers&cID=' . $Qtickets->valueInt('customers_id')) . '" title="' . $lC_Language->get('text_view_customer_listing') . '" target="_blank">
+                       <span class="icon-user small-margin-right"></span> 
+                       ' . $Qtickets->value('customers_name') . '
+                     </a>';
+      if ($Qtickets->valueInt('orders_id') != '-1' && $oValid['error'] != true) {               
+        $customer .= '<br class="mid-margin-bottom">
+                       <a href="' . lc_href_link_admin(FILENAME_DEFAULT, 'orders=' . $Qtickets->valueInt('orders_id')) . '&action=save" target="_blank" class="strong">
+                         <span class="icon-price-tag red small-margin-right"></span> Related Order
+                       </a>';
+      }               
+      $customer .= '</td>';
       $status = '<td><span class="tag ' . self::getStatusColor($Qlatestcomments->valueInt('ticket_status_id')) . '-bg no-wrap with-small-padding">' . ucfirst(self::getStatusTitle($Qlatestcomments->valueInt('ticket_status_id'))) . '</span></td>';
       $priority = '<td><span class="tag ' . self::getPriorityColor($Qlatestcomments->valueInt('ticket_priority_id')) . '-bg no-wrap with-small-padding">' . self::getPriorityTitle($Qlatestcomments->valueInt('ticket_priority_id')) . '</span></td>';
       $date = '<td>' . substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qtickets->value('date_added'), true), -5)))) . '</td>';
