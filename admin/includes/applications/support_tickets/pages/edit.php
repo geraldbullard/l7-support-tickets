@@ -83,7 +83,7 @@ if (is_numeric($_GET[$lC_Template->getModule()])) {
                   <label class="button blue-gradient cursor-default" for="ticket_customer">
                     <span class="icon-white small-margin-right">
                       <span class="small-margin-left" id="edit-company_owner_name">
-                        Search
+                        <?php echo $lC_Language->get('text_search'); ?>
                       </span>
                     </span>
                   </label>
@@ -100,11 +100,13 @@ if (is_numeric($_GET[$lC_Template->getModule()])) {
                 <?php echo lc_draw_input_field('ticket_subject', null, 'class="required input full-width mid-margin-top" id="ticket_subject"'); ?>
               </p>
               <p class="button-height block-label disabled">
-                <label class="label" for="ticket_customer">
+                <label class="label" for="ticket_orders_dropdown">
                   <?php echo $lC_Language->get('field_order_id'); ?>
                   <?php echo lc_show_info_bubble($lC_Language->get('info_bubble_ticket_order_id'), null); ?>
                 </label>
-                <?php echo lC_Support_tickets_Admin::drawTicketOrdersDropdown(1, 'anthracite-gradient'); ?>
+                <div id="ticket_orders_id_dropdown">
+                  <?php echo lC_Support_tickets_Admin::drawTicketOrdersDropdown(null, 'anthracite-gradient'); ?>
+                </div>
               </p>
             </div>
           </div>            

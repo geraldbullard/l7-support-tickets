@@ -368,43 +368,29 @@ class lC_Support_tickets_Admin {
   */ 
   public static function drawTicketOrdersDropdown($cid, $classes = null) { 
     global $lC_Database, $lC_Language;
+    
+    $lC_Language->loadIniFile('support_tickets.php');
 
-    //$Qorders = $lC_Database->query('select ticket_response_text, ticket_response_name from :table_ticket_response where ticket_language_id = :ticket_language_id order by ticket_response_id asc');
-    //$Qorders->bindTable(':table_ticket_response', DB_TABLE_PREFIX . 'ticket_response');
-    //$Qorders->bindInt(':ticket_language_id', $lC_Language->getID());
-    //$Qorders->execute();
+    $Qorders = $lC_Database->query("select o.orders_id, o.date_purchased, ot.text from :table_orders o left join :table_orders_total ot on (o.orders_id = ot.orders_id) where o.customers_id = :customers_id and ot.class = :class order by orders_id desc");
+    $Qorders->bindTable(':table_orders', TABLE_ORDERS);
+    $Qorders->bindTable(':table_orders_total', TABLE_ORDERS_TOTAL);
+    $Qorders->bindInt(':customers_id', $cid);
+    $Qorders->bindValue(':class', 'total');
+    $Qorders->execute();
     
-    //$Qordersarray = array();
-    //while ($Qorders->next()) {
-    //  $Qordersarray[$Qorders->value('')] = $Qorders->value('');
-    //}
+    $Qordersarray = array();
+    while ($Qorders->next()) {
+      $Qordersarray[$Qorders->valueInt('orders_id')] = $lC_Language->get('text_id') . ': ' . $Qorders->valueInt('orders_id') . '&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_total') . ': ' . $Qorders->value('text') . '&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_date') . ': ' . substr($Qorders->value('date_purchased'), 0, -9);
+    }
     
-    $coDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . '" style="min-width:150px" id="ticket_order_id" name="ticket_order_id">';
+    $coDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . ' anthracite-gradient" style="min-width:150px" id="ticket_order_id" name="ticket_order_id">';
     $coDropdown .= '<option value="">' . $lC_Language->get('text_select_order') . '</option>';
-    $coDropdown .= '<option value="1">#1 $13.98 10/22/2014</option>';
-    /*foreach ($Qordersarray as $id => $val) {
+    foreach ($Qordersarray as $id => $val) {
       $coDropdown .= '<option value="' . $id . '">' . $val . '</option>';
-    }*/
+    }
     $coDropdown .= '</select>';
     
     return $coDropdown;
-  }
- /*
-  * Returns the number of open tickets
-  *
-  * @access public
-  * @return array
-  */
-  public static function openTicketCount() {
-    global $lC_Database;
-
-    $Qopentickets = $lC_Database->query("SELECT COUNT(*) AS count FROM :table_tickets WHERE status_id = 1");
-    $Qopentickets->bindTable(':table_tickets', DB_TABLE_PREFIX . 'tickets');
-    $Qopentickets->execute();
-    
-    $result['count'] = $Qopentickets->value('count');
-    
-    return $result;
   }
  /*
   * Returns the ticket status title

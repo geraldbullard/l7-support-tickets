@@ -82,5 +82,20 @@ class lC_Support_tickets_Admin_rpc {
     
     echo json_encode($result);
   }
+ /*
+  * Get the ticket orders dropdown html
+  *
+  * @param string $_GET['cid'] The customers id
+  * @access public
+  * @return json
+  */
+  public static function drawTicketOrdersDropdown() {
+    $result = array();
+    if ($result['html'] = lC_Support_tickets_Admin::drawTicketOrdersDropdown($_GET['cid'])) {
+      $result['rpcStatus'] = RPC_STATUS_SUCCESS;    
+    }
+    
+    echo json_encode($result);
+  }
 }
 ?>

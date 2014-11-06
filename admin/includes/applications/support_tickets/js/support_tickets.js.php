@@ -144,9 +144,27 @@ function ticketCustomerSearch(q) {
 }
 
 function setTicketCustomer(cid, name) {
+  // set the page/html results
   $("#ticket_customer_results").hide();
-  $("#ticket_order_id").closest('p').removeClass('disabled');
   $("#ticket_customer").val(name);
   $("#ticket_customer_id").val(cid);
+  
+  // update the orders dropdown
+  var jsonLink = '<?php echo lc_href_link_admin('rpc.php', $lC_Template->getModule() . '&action=drawTicketOrdersDropdown&cid=CID'); ?>'
+  $.getJSON(jsonLink.replace('CID', cid),
+    function (data) {
+      if (data.rpcStatus == -10) { // no session
+        var url = "<?php echo lc_href_link_admin(FILENAME_DEFAULT, 'login'); ?>";
+        $(location).attr('href',url);
+      }
+      if (data.rpcStatus != 1) {
+        $.modal.alert('<?php echo $lC_Language->get('ms_error_action_not_performed'); ?>');
+        return false;
+      }
+      if (data.rpcStatus == 1) {
+        $('#ticket_orders_id_dropdown').html(data.html);
+      }
+    }
+  );
 }
 </script>
