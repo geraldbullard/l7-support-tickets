@@ -46,7 +46,7 @@ class lC_Support_tickets_Admin {
                      '<span class="anthracite">' . $Qlatestcomments->value('ticket_edited_by') . '<br class="small-margin-bottom" />' .
                      substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), 0, -5) . ' ' . str_replace(' ', '', date("g:i a", strtotime(substr(lC_DateTime::getLong($Qlatestcomments->value('ticket_date_modified'), true), -5)))) . '</span></span>' .
                      '<br class="mid-margin-bottom" /> ' . 
-                     $Qlatestcomments->value('ticket_comments') . 
+                     (strlen($Qlatestcomments->value('ticket_comments')) > 200 ? substr($Qlatestcomments->value('ticket_comments'), 0, 200) . '...' : $Qlatestcomments->value('ticket_comments')) . 
                    '</p>
                  </td>';
       $customer = '<td>
@@ -380,7 +380,7 @@ class lC_Support_tickets_Admin {
     
     $Qordersarray = array();
     while ($Qorders->next()) {
-      $Qordersarray[$Qorders->valueInt('orders_id')] = $lC_Language->get('text_id') . ': ' . $Qorders->valueInt('orders_id') . '&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_total') . ': ' . $Qorders->value('text') . '&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_date') . ': ' . substr($Qorders->value('date_purchased'), 0, -9);
+      $Qordersarray[$Qorders->valueInt('orders_id')] = $lC_Language->get('text_id') . ': ' . $Qorders->valueInt('orders_id') . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_total') . ': ' . $Qorders->value('text') . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $lC_Language->get('text_date') . ': ' . substr(substr($Qorders->value('date_purchased'), 0, -9), 5) . '-' . substr(substr($Qorders->value('date_purchased'), 0, -9), 0, -6);
     }
     
     $coDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . ' anthracite-gradient" style="min-width:150px" id="ticket_order_id" name="ticket_order_id">';
