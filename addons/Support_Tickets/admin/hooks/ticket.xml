@@ -37,5 +37,23 @@
         ]]>
       </add>
     </operation>
+    <operation info="Add menu pointer">
+      <search position="replace">
+        <![CDATA[} else if (module.indexOf("categories") != -1 && document.location.href.indexOf("categories") != -1) {]]>
+      </search>         
+      <add>
+        <![CDATA[
+  } else if (module.indexOf("ticket_status") != -1 && document.location.href.indexOf("ticket_status") != -1) {
+    $("#big-menu_ticket_status").addClass('current navigable-current').change();
+  } else if (module.indexOf("ticket_department") != -1 && document.location.href.indexOf("ticket_department") != -1) {
+    $("#big-menu_ticket_department").addClass('current navigable-current').change();
+  } else if (module.indexOf("ticket_priority") != -1 && document.location.href.indexOf("ticket_priority") != -1) {
+    $("#big-menu_ticket_priority").addClass('current navigable-current').change();
+  } else if (module.indexOf("ticket_response") != -1 && document.location.href.indexOf("ticket_response") != -1) {
+    $("#big-menu_ticket_response").addClass('current navigable-current').change();
+  } else if (module.indexOf("categories") != -1 && document.location.href.indexOf("categories") != -1) {
+        ]]>
+      </add>
+    </operation>
   </file>
 </modification>
