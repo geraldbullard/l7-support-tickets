@@ -32,7 +32,7 @@ if (is_numeric($_GET[$lC_Template->getModule()])) {
       <div class="new-row-mobile twelve-columns twelve-columns-mobile" id="ticket_content">
         <fieldset class="fieldset">
           <legend class="legend"><?php echo $lC_Language->get('legend_ticket_details'); ?></legend>
-          <?php
+          <?php 
             if (isset($tInfo) && $tInfo != '') {
           ?>
           <input id="ticket_customer_id" type="hidden" value="<?php echo $tInfo[0]['customers_id']; ?>" name="ticket_customer_id">
@@ -70,6 +70,20 @@ if (is_numeric($_GET[$lC_Template->getModule()])) {
                 $tshID++;
               }
               $tshID = $tshID-1;
+          ?>
+          <div class="columns">
+            <div class="twelve-columns twelve-columns-mobile new-row-mobile">
+              <p class="button-height block-label disabled">
+                <label class="label" for="ticket_orders_dropdown">
+                  <?php echo $lC_Language->get('field_order_id'); ?>
+                </label>
+                <div id="ticket_orders_id_dropdown">
+                  <?php echo lC_Support_tickets_Admin::drawTicketOrdersDropdown(1, 'anthracite-gradient', $tInfo[0]['orders_id']); ?>
+                </div>
+              </p>
+            </div>
+          </div>
+          <?php
             } else {
           ?>
           <div class="columns">

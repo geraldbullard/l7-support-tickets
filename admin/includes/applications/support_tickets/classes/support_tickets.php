@@ -129,7 +129,7 @@ class lC_Support_tickets_Admin {
     $Qcustomer->execute(); 
     
     if (!empty($id) && is_numeric($id)) {
-      $Qticket = $lC_Database->query('update :table_tickets set status_id = :status_id, department_id = :department_id, priority_id = :priority_id, last_modified = :last_modified where ticket_id = :ticket_id');
+      $Qticket = $lC_Database->query('update :table_tickets set status_id = :status_id, department_id = :department_id, priority_id = :priority_id, orders_id = :orders_id, last_modified = :last_modified where ticket_id = :ticket_id');
       $Qticket->bindInt(':ticket_id', $id);
     } else {
       $Qticket = $lC_Database->query('insert into :table_tickets (link_id, customers_id, customers_email, customers_name, orders_id, subject, status_id, department_id, priority_id, date_added, last_modified, login_required) values (:link_id, :customers_id, :customers_email, :customers_name, :orders_id, :subject, :status_id, :department_id, :priority_id, :date_added, :last_modified, :login_required);');
@@ -146,6 +146,7 @@ class lC_Support_tickets_Admin {
     $Qticket->bindInt(':status_id', $data['ticket_status']);
     $Qticket->bindInt(':department_id', $data['ticket_department']);
     $Qticket->bindInt(':priority_id', $data['ticket_priority']);
+    $Qticket->bindInt(':orders_id', $data['ticket_order_id']);
     $Qticket->bindRaw(':last_modified', 'now()');
     $Qticket->bindInt(':login_required', $data['login_required']);
     $Qticket->setLogging($_SESSION['module'], $id);
@@ -366,7 +367,7 @@ class lC_Support_tickets_Admin {
   * @access public
   * @return array
   */ 
-  public static function drawTicketOrdersDropdown($cid, $classes = null) { 
+  public static function drawTicketOrdersDropdown($cid, $classes = null, $oid = null) { 
     global $lC_Database, $lC_Language;
     
     $lC_Language->loadIniFile('support_tickets.php');
@@ -386,7 +387,11 @@ class lC_Support_tickets_Admin {
     $coDropdown = '<select class="select withClearFunctions' . ((!empty($classes)) ? ' ' . $classes : null) . ' anthracite-gradient" style="min-width:150px" id="ticket_order_id" name="ticket_order_id">';
     $coDropdown .= '<option value="">' . $lC_Language->get('text_select_order') . '</option>';
     foreach ($Qordersarray as $id => $val) {
-      $coDropdown .= '<option value="' . $id . '">' . $val . '</option>';
+      $coDropdown .= '<option value="' . $id . '"';
+      if ($oid == $id) {
+        $coDropdown .= ' selected="selected"';
+      }
+      $coDropdown .= '>' . $val . '</option>';
     }
     $coDropdown .= '</select>';
     
